@@ -1,0 +1,18 @@
+---
+import Base from '@/layouts/Base.astro';
+import CvView from '@/components/CvView.astro';
+import { profilePageJsonLd } from '@/lib/seo';
+---
+
+<Base
+  title="CV: Kyle Nel, senior full-stack engineer"
+  description="Kyle Nel's CV: senior full-stack engineer. TypeScript, React, Node.js, PHP, WordPress and DevOps, with six years at Automattic."
+  type="profile"
+  jsonLd={profilePageJsonLd(
+    new URL(Astro.url.pathname, Astro.site),
+    'CV: Kyle Nel, senior full-stack engineer',
+    { cv: true },
+  )}
+>
+  <CvView track="engineering" />
+</Base>

@@ -1,0 +1,100 @@
+---
+import Logo from './brand/Logo.astro';
+import Mark from './brand/Mark.astro';
+import { getSite, siteLink } from '@/lib/content';
+
+const site = await getSite();
+const blog = siteLink(site, 'blog');
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const nav: { label: string; href: string; current?: 'page' | 'true'; external?: boolean }[] = [
+  // "page" for the page itself; "true" for the section a case study sits in.
+  { label: 'Work', href: '/#work', current: path.startsWith('/work') ? 'true' : undefined },
+  { label: 'About', href: '/about/', current: path === '/about' ? 'page' : undefined },
+  { label: 'Writing', href: blog.url, external: true },
+  { label: 'Contact', href: '/contact/', current: path === '/contact' ? 'page' : undefined },
+];
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__home" aria-label={`${site.brand}: home`}>
+      <Logo subtitle={false} class="site-header__logo" />
+      <Mark class="site-header__mark" />
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={item.current}>
+              {item.label}
+              {item.external && <span class="visually-hidden"> (devnel.blog)</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-block: var(--space-m);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .site-header__home {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    min-height: 44px;
+  }
+
+  .site-header__home :global(.site-header__logo) {
+    --logo-width: 8.5rem;
+  }
+
+  .site-header__home :global(.site-header__mark) {
+    display: none;
+    --mark-width: 2.75rem;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 clamp(0.75rem, 2.5vw, 1.75rem);
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    display: inline-block;
+    padding-block: 0.6rem;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration-color: transparent;
+  }
+
+  nav a:hover,
+  nav a[aria-current] {
+    color: var(--link);
+    text-decoration-color: var(--underline);
+  }
+
+  /* On narrow screens the full wordmark gives way to the [>·<] mark. */
+  @media (max-width: 34rem) {
+    .site-header__home :global(.site-header__logo) {
+      display: none;
+    }
+
+    .site-header__home :global(.site-header__mark) {
+      display: block;
+    }
+  }
+</style>

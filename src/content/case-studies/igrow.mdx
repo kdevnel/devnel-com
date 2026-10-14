@@ -1,0 +1,117 @@
+---
+title: 'IGrow: viewing-booking tool and rentals site'
+slug: igrow
+summary: 'A viewing-booking tool tied into Zoho CRM, and a rebuilt rentals site that went from GTmetrix E/F to A/B.'
+client: IGrow Group of Companies
+role: Senior Web Developer
+period: 'Mar – Oct 2026'
+stack:
+  - PHP
+  - WordPress
+  - TypeScript
+  - Zoho CRM / Flow / SalesIQ APIs
+  - PropData
+  - Google Maps APIs
+  - NGINX
+  - GitHub Actions
+links:
+  - label: rentals.igrow.co.za
+    url: https://rentals.igrow.co.za
+cover: igrow
+coverAlt: 'The IGrow Rentals property search: filters for area, type, price and bedrooms above featured developments with photos and monthly rents.'
+order: 3
+featured: true
+---
+
+import ArchDiagram from '@/components/ArchDiagram.astro';
+
+## The problem
+
+IGrow is a Cape Town property investment group with companies covering
+investments, rentals, real estate and removals. Viewings for rental properties
+were booked by hand through the contact centre. Every booking had to go through
+the contact centre, which made it a bottleneck, and management had little
+visibility of what was being booked, by whom, and what happened next.
+
+The rentals site had its own problem: it was slow. GTmetrix graded it E or F.
+
+## Constraints
+
+- The tool had to work hand in hand with Zoho CRM: linking user accounts,
+  managing leads and recording every booking against the right Zoho module.
+- Three very different groups needed different levels of access: contact-centre
+  staff, rental agents and management.
+- Listings come from PropData, so the site and the booking tool both had to stay
+  in sync with 200+ properties without anyone copying data by hand.
+- The rentals site was a test for what was possible with the other company
+  sites. This led to a timeline of only 3 weeks of solo work.
+- The website was hosted on a congested server that was further limiting
+  performance and needed migrating.
+
+## What I built
+
+**An internal viewing-booking tool, tightly coupled with Zoho CRM.** It links
+user accounts, manages leads and records each booking against the relevant Zoho
+module, so the CRM stays the single place to look.
+
+**Role-based access** for contact-centre staff, agents and management, so each
+group sees and does what it needs to.
+
+**Self-service booking for prospective tenants.** People can book a viewing
+themselves instead of waiting on the contact centre. That took people out of
+the bottleneck and improved booking rates.
+
+**A rebuilt rentals.igrow.co.za**: a custom, performance-first theme, proper
+caching, and a PropData integration that keeps 200+ listings in sync on a
+schedule.
+
+**The infrastructure around it**: Linux servers running NGINX and Caddy, and
+GitHub Actions pipelines that run smoke and synthetic tests before every deploy.
+
+<ArchDiagram
+  title="IGrow viewing-booking architecture"
+  description="Prospective tenants, contact-centre staff, and agents and management all book viewings through the booking tool. The booking tool records users, leads and bookings in Zoho CRM. PropData feeds property listings into the booking tool."
+  nodes={[
+    { id: 'tenants', label: 'Prospective tenants', sub: 'self-service', col: 0, row: 0 },
+    { id: 'cc', label: 'Contact centre', sub: '25+ staff', col: 1, row: 0 },
+    { id: 'agents', label: 'Agents & management', sub: 'role-based access', col: 2, row: 0 },
+    { id: 'tool', label: 'Booking tool', sub: 'built by me', col: 1, row: 1, primary: true },
+    { id: 'propdata', label: 'PropData', sub: '200+ listings', col: 2, row: 1 },
+    { id: 'zoho', label: 'Zoho CRM', sub: 'users · leads · bookings', col: 1, row: 2 },
+  ]}
+  edges={[
+    { from: 'tenants', to: 'tool' },
+    { from: 'cc', to: 'tool' },
+    { from: 'agents', to: 'tool' },
+    { from: 'propdata', to: 'tool', label: 'listings' },
+    { from: 'tool', to: 'zoho', both: true },
+  ]}
+/>
+
+The next step, scoped but not built, was an agent roster generator: a rules
+engine and real Google Maps travel times to replace manual scheduling and fit
+more viewings into each day.
+
+## Stack
+
+PHP and WordPress for the rentals site and PropData. TypeScript for the booking
+tool. Zoho CRM, Flow, SalesIQ API and Google Maps APIs alongside both in
+relevant place. Managed Hosting for WordPress, NGINX on Linux for the booking
+tool. GitHub Actions for CI/CD on both.
+
+## Results
+
+- **25+ contact-centre staff, 10 rental agents and management** use the booking
+  tool.
+- **30+ bookings a day** across 200 properties.
+- **GTmetrix went from E/F to A/B** on the rentals site, and server load fell
+  even as traffic grew.
+
+## What I'd do differently
+
+- Fully finalise the web component design system ahead of the build. This would
+  have made consistency easier from the beginning in a quickly-changing
+  environment.
+- As a test site, I was conservative with how I handled the frontend. I opted
+  for a traditional PHP WordPress theme frontend with a parent theme dependency.
+  A fully custom theme would have provided me more control.

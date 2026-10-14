@@ -1,0 +1,42 @@
+---
+/**
+ * The [>·<] mark on its own: a bowtie made of code brackets (symbol in
+ * BrandSprite.astro).
+ * Keep both readings intact: don't redraw it as a plain bowtie or code icon.
+ * Pass a label to make it meaningful; otherwise it's decorative.
+ */
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<svg
+  class:list={['mark', className]}
+  viewBox="0 0 219.4 111.8"
+  fill="currentColor"
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+>
+  <use href="#devnel-mark" width="219.4" height="111.8"></use>
+</svg>
+
+<style>
+  .mark {
+    width: var(--mark-width, 2.5rem);
+    height: auto;
+    color: var(--mark);
+  }
+
+  /* Same "straighten the bowtie" wiggle as the logo (keyframes in global.css). */
+  @media (prefers-reduced-motion: no-preference) {
+    .mark:hover,
+    :global(a:hover) > .mark {
+      animation: var(--wiggle);
+    }
+  }
+</style>

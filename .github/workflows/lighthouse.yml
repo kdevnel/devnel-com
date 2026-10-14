@@ -1,0 +1,39 @@
+# Lighthouse smoke test after merging to main (and on demand). It fails only
+# on a real regression: Accessibility, Best Practices or SEO below 100, or
+# Performance below 90. See scripts/lighthouse.mjs.
+name: Lighthouse
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build:node
+        env:
+          TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      - name: Lighthouse (mobile)
+        run: npm run lighthouse | tee -a "$GITHUB_STEP_SUMMARY"
+        env:
+          # The contact endpoint needs these to start; test values only.
+          FORM_SIGNING_SECRET: ci-only-signing-secret
+          TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+          MAIL_PROVIDER: log

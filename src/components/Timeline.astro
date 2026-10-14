@@ -1,0 +1,74 @@
+---
+/** Career timeline. Dates, companies and roles come straight from resume.json. */
+import { getResume } from '@/lib/content';
+import { formatPeriod } from '@/lib/format';
+
+const { work } = getResume('engineering');
+---
+
+<ol class="timeline" role="list">
+  {work.map((job) => (
+    <li>
+      <span class="timeline__when mono">{formatPeriod(job.startDate, job.endDate)}</span>
+      <div>
+        <h3>{job.position}</h3>
+        <p class="timeline__where">
+          {job.name}
+          {job.location && job.location !== 'Remote' && <span class="meta"> · {job.location}</span>}
+        </p>
+        {job['x-note'] && <p class="meta">{job['x-note']}</p>}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline {
+    display: grid;
+    padding: 0;
+    list-style: none;
+    border-inline-start: 2px solid var(--rule);
+  }
+
+  li {
+    position: relative;
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    padding: 0 0 var(--space-l) var(--space-m);
+  }
+
+  li::before {
+    content: '';
+    position: absolute;
+    top: 0.45em;
+    left: -7px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  li:last-child {
+    padding-block-end: 0;
+  }
+
+  .timeline__when {
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+
+  h3 {
+    font-size: var(--step-1);
+  }
+
+  .timeline__where {
+    font-weight: 600;
+  }
+
+  @media (min-width: 48rem) {
+    li {
+      grid-template-columns: 11rem 1fr;
+    }
+  }
+</style>

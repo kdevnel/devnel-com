@@ -1,0 +1,9 @@
+dist
+.astro
+node_modules
+package-lock.json
+src/data/resume.json
+src/assets/brand
+public
+playwright-report
+test-results

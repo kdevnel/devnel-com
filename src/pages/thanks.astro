@@ -1,0 +1,32 @@
+---
+import Base from '@/layouts/Base.astro';
+import Mark from '@/components/brand/Mark.astro';
+---
+
+<Base title="Message received" description="Thanks for getting in touch." noindex>
+  <section class="container section thanks">
+    <Mark class="thanks__mark" label="devNel mark: a bowtie made of code brackets" />
+    <h1>Message received.</h1>
+    <p class="lede">I'll get back to you soon.</p>
+    <div class="button-row">
+      <a class="button" href="/">
+        Back to home
+      </a>
+      <a class="button button--secondary" href="/#work">
+        See my work
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thanks {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-m);
+  }
+
+  .thanks :global(.thanks__mark) {
+    --mark-width: 4.5rem;
+  }
+</style>

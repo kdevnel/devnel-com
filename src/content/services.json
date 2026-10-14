@@ -1,0 +1,20 @@
+[
+  {
+    "id": "engineering",
+    "order": 1,
+    "title": "Full-stack web engineering",
+    "body": "TypeScript, React, Node.js and PHP. WordPress and WooCommerce in depth, plus modern stacks like Astro and Sanity."
+  },
+  {
+    "id": "devops",
+    "order": 2,
+    "title": "DevOps and infrastructure",
+    "body": "Linux servers, NGINX and Caddy, Docker, CI/CD with GitHub Actions, and the boring reliability work that keeps sites fast."
+  },
+  {
+    "id": "support",
+    "order": 3,
+    "title": "Support and team leadership",
+    "body": "Five years as a senior escalation engineer at WordPress.com, team management, and building tools that take pressure off the people dealing with customers."
+  }
+]

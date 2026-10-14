@@ -1,0 +1,30 @@
+// Cloudflare Workers config. The Astro adapter fills in `main` and the
+// ASSETS binding, and writes the final config to dist/server/wrangler.json,
+// which `wrangler deploy` picks up after `npm run build`.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "devnel-com",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    // /about → /about/, matching trailingSlash: 'always'.
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+  // Non-secret settings. Secrets (TURNSTILE_SECRET_KEY, FORM_SIGNING_SECRET,
+  // RESEND_API_KEY) are set with `npx wrangler secret put <NAME>`.
+  // TURNSTILE_SITE_KEY (public) can go here too: `npm run deploy` builds with
+  // these vars and ignores .env, so a local test key can't ship.
+  "vars": {
+    "MAIL_PROVIDER": "resend",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFWW6zhRk-nx6M-a",
+    // The adapter already sets the client address from CF-Connecting-IP.
+    "CLIENT_IP_HEADER": "none",
+  },
+  "observability": { "enabled": true },
+  // Cloudflare creates the DNS records and certificates for these. A deploy
+  // fails while either hostname still has its own A/CNAME record in the zone.
+  "routes": [
+    { "pattern": "devnel.com", "custom_domain": true },
+    { "pattern": "www.devnel.com", "custom_domain": true },
+  ],
+}

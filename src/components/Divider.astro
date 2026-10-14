@@ -1,0 +1,23 @@
+---
+import Mark from './brand/Mark.astro';
+---
+
+<div class="divider" role="presentation">
+  <Mark />
+</div>
+
+<style>
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    --mark-width: 2rem;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    border-top: var(--border);
+  }
+</style>

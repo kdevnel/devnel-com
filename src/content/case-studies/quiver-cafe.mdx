@@ -1,0 +1,112 @@
+---
+title: 'Quiver Café and Liège Waffles'
+slug: quiver-cafe
+summary: 'Static pages turned into sites anyone on the team can edit: still fast, better for SEO, nearly free to run, and with online ordering ready to switch on.'
+client: Quiver Café (Quiver Foundation)
+role: Developer (devNel)
+period: 'October 2026'
+stack:
+  - Astro
+  - Sanity
+  - TypeScript
+  - Cloudflare Workers
+  - Yoco
+  - Uber Direct
+  - Resend.com
+links:
+  - label: quivercafe.co.za
+    url: https://quivercafe.co.za
+  - label: liegewaffles.co.za
+    url: https://liegewaffles.co.za
+cover: quiver-cafe
+coverAlt: 'The Liège Waffles home page: a burnt-orange hero with photos of topped waffles, an Order now button and a scrolling ticker below.'
+order: 1
+featured: true
+---
+
+import ArchDiagram from '@/components/ArchDiagram.astro';
+
+## The problem
+
+Quiver Café is a social-impact café and waffle cart in Woodstock, Cape Town,
+and part of the Quiver Foundation. Its two sites, quivercafe.co.za and
+liegewaffles.co.za, were static pages.
+
+Static pages are fast and cheap to host, but every content change meant editing
+the pages themselves, so updates needed someone comfortable working in code.
+The business also wanted to sell online eventually, which static pages can't do
+on their own.
+
+## Constraints
+
+- **Keep what was good about static.** Performance and running costs couldn't get
+  worse.
+- **Anyone on the team has to be able to manage the content**, without a
+  developer and without breaking anything.
+- **The sites should stay AI-friendly to edit.**
+- **The powerful parts have to be safe.** Taking payments and arranging delivery
+  are real commitments for a small business, so they had to be easy to switch
+  on when the business is ready, and not before.
+- **Running costs and maintenance have to stay low.** It's a small social-impact
+  business run by a non-profit, and the site shouldn't become a cost centre.
+
+## What I built
+
+**A rebuild of both sites on Astro and Sanity, deployed on Cloudflare Workers.**
+I introduced content editing. Everything the team needs to change is editable in
+Sanity Studio, while the sites stay AI-friendly to edit and tracked through GitHub.
+
+**Structure that protects the sites.** Content now has a defined shape in
+Sanity, rather than living in the page markup. That gives the sites better
+resilience against unwanted breakage or changes: editing content can't break the
+layout around it.
+
+**Online ordering, built and ready.** Payments go through Yoco and delivery is
+arranged through Uber Direct. Orders and live status updates are sent to a
+dedicated Slack channel for order management and tacking. The business can switch
+this on with a single toggle in the Sanity dashboard whenever they're ready: no
+developer and no manual deploy.
+
+<ArchDiagram
+  title="Quiver Café architecture"
+  description="The team edits content and flips the ordering toggle in Sanity Studio. Astro on Cloudflare Workers reads that content and serves both sites to customers. When ordering is switched on, the site takes payments through Yoco and books delivery through Uber Direct."
+  nodes={[
+    { id: 'owner', label: 'The team', sub: 'no developer needed', col: 0, row: 0 },
+    { id: 'sanity', label: 'Sanity Studio', sub: 'content + ordering toggle', col: 1, row: 0 },
+    { id: 'customers', label: 'Customers', sub: 'both sites', col: 0, row: 1 },
+    { id: 'site', label: 'Astro site', sub: 'Cloudflare Workers', col: 1, row: 1, primary: true },
+    { id: 'yoco', label: 'Yoco', sub: 'payments', col: 2, row: 0 },
+    { id: 'uber', label: 'Uber Direct', sub: 'delivery', col: 2, row: 1 },
+  ]}
+  edges={[
+    { from: 'owner', to: 'sanity', label: 'edits' },
+    { from: 'sanity', to: 'site', label: 'content' },
+    { from: 'site', to: 'customers' },
+    { from: 'site', to: 'yoco' },
+    { from: 'site', to: 'uber' },
+  ]}
+/>
+
+## Stack
+
+Astro and TypeScript for the sites, Sanity for content and settings, Cloudflare
+Workers for hosting, Yoco for payments, Uber Direct for delivery, and Slack for
+order notifications and tracking.
+
+## Results
+
+- **Performance is still top notch**, as it was with the static pages. Lighthouse
+  scores in the high 90s, with some improvements in asset rendering.
+- **SEO, OpenGraph and schema is improved.**
+- **Accessibility is improved and automated axe checks in CI.**
+- **Anyone on the team can manage the sites** in Sanity Studio.
+- The founder can continue to make deeper design and layout changes with AI.
+- **Ongoing and hosting costs are close to nothing**, compared with a full hosted
+  CMS website that could cost upwards of $300 per year.
+- **Both sites are fully live**, and online ordering is ready to switch on with
+  one toggle.
+
+## What I'd do differently
+
+- Provide some specific agent identities and skills in the codebase to make
+  AI-assisted changes more predictable for anyone editing the site.

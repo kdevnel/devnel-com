@@ -1,0 +1,116 @@
+/*
+ * devNel design tokens.
+ * Colours derive from the 2018 brand palette (sage, clay, sun, stone).
+ * Contrast ratios for every text pairing are listed in the README.
+ */
+:root {
+  /* Palette */
+  --paper: #fbf7ee;
+  --paper-2: #f6ebcf;
+  --ink: #23302e;
+  --sage: #597470;
+  --sage-deep: #4a615e;
+  --pine: #2f3e3c;
+  --clay: #726258;
+  --sun: #fad890;
+  --stone: #bfb8af;
+  --stone-2: #9b928b; /* pattern only: never text (2.9:1) */
+
+  /* Semantic roles (the dark theme remaps these) */
+  --bg: var(--paper);
+  --bg-alt: var(--paper-2);
+  --text: var(--ink);
+  --text-muted: var(--clay);
+  --heading: var(--sage);
+  --link: var(--sage);
+  --link-hover: var(--sage-deep);
+  /* --sage on --paper-2 is only 4.3:1, so text on alt surfaces uses --sage-deep */
+  --link-alt: var(--sage-deep);
+  --heading-alt: var(--sage-deep);
+  /* Small text over the slash pattern (worst case: on a stroke at 0.3
+     opacity): clay drops to 4.3:1 there, so pattern bands use a deeper clay. */
+  --muted-on-pattern: #67584f;
+  --underline: var(--sun);
+  --rule: var(--stone);
+  --focus: var(--sage-deep);
+  --accent: var(--sun);
+  --on-accent: var(--ink);
+  --mark: var(--clay);
+  --logo-word: var(--sage);
+  --logo-mark: var(--clay);
+  --pattern: var(--stone);
+  --pattern-opacity: 0.45;
+  --error: #9e3a2b; /* 6.4:1 on --paper */
+  --success: var(--sage-deep);
+
+  /* Typography */
+  --font-display: 'Quando', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-body:
+    'Source Sans 3 Variable', 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Fluid type scale (min at 360px, max at 1240px viewport) */
+  --step--1: clamp(0.875rem, 0.86rem + 0.07vw, 0.9375rem);
+  --step-0: clamp(1.0625rem, 1.03rem + 0.14vw, 1.1875rem);
+  --step-1: clamp(1.25rem, 1.19rem + 0.28vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.38rem + 0.51vw, 1.9375rem);
+  --step-3: clamp(1.8125rem, 1.6rem + 0.95vw, 2.625rem);
+  --step-4: clamp(2.125rem, 1.79rem + 1.5vw, 3.4375rem);
+  --step-5: clamp(2.5rem, 1.98rem + 2.3vw, 4.5rem);
+
+  --leading-body: 1.6;
+  --leading-heading: 1.2;
+  --measure: 68ch;
+
+  /* Space */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  --space-2xl: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  --space-3xl: clamp(4.5rem, 3rem + 6vw, 8rem);
+
+  /* Layout */
+  --page-max: 72rem;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --radius: 4px;
+  --border: 1px solid var(--rule);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur: 350ms;
+
+  color-scheme: light dark;
+}
+
+/* Optional dark theme: matte pine background, cream text, yellow accents. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--pine);
+    --bg-alt: #283533;
+    --text: var(--paper);
+    --text-muted: #d9cfc0;
+    --heading: var(--sun);
+    --link: var(--sun);
+    --link-hover: #fde6b4;
+    --link-alt: var(--sun);
+    --heading-alt: var(--sun);
+    --muted-on-pattern: var(--text-muted);
+    --underline: var(--sage);
+    --rule: #50605d;
+    --focus: var(--sun);
+    --accent: var(--sun);
+    --on-accent: var(--ink);
+    --mark: var(--sun);
+    --logo-word: var(--paper);
+    --logo-mark: var(--sun);
+    --pattern: var(--sage);
+    --pattern-opacity: 0.5;
+    --error: #f2a594;
+    --success: var(--sun);
+  }
+}

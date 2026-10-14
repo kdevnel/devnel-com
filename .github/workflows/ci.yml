@@ -1,0 +1,57 @@
+name: CI
+
+# Third-party actions are pinned to commit SHAs (tag in the comment).
+
+# Pushes to main, and every pull request (not both for the same commit).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Resume privacy and JSON Resume schema
+        run: npm run resume:check
+      - name: Contrast ratios
+        run: npm run contrast
+      - name: Type check
+        run: npm run check
+      - name: Lint
+        run: npm run lint && npm run format:check
+      - name: Build (Workers, as deployed)
+        run: npm run build
+      - name: Build (Node, for the e2e tests)
+        run: npm run build:node
+        env:
+          # Cloudflare's public always-pass test key, for the e2e tests.
+          TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      - name: Check the build (no TODO(kyle), plain-text email or phone numbers in HTML or PDFs)
+        run: npm run check:dist
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end tests
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

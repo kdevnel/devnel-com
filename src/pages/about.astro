@@ -1,0 +1,155 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Timeline from '@/components/Timeline.astro';
+import { getResume } from '@/lib/content';
+import { profilePageJsonLd } from '@/lib/seo';
+
+const { volunteer, education } = getResume('engineering');
+const church = volunteer[0];
+const degree = education[0];
+---
+
+<Base
+  title="About Kyle Nel"
+  description="Kyle Nel, full-stack engineer and support lead in Cape Town: six years at Automattic, four as an agency Technical Director, and his own consultancy."
+  type="profile"
+  jsonLd={profilePageJsonLd(new URL(Astro.url.pathname, Astro.site), 'About Kyle Nel')}
+>
+  <section class="container section about-intro">
+    <div class="about-intro__text">
+      <SectionHeading eyebrow="about" title="About me" level="h1" />
+      <div class="prose">
+        <p class="lede">
+          I'm a down-to-earth engineer who loves the web. I've worked on both sides of it: building
+          sites and tools, and supporting the people who rely on them.
+        </p>
+        <p>
+          Most recently I was Senior Web Developer at IGrow Group in Cape Town, where I built a
+          viewing-booking tool tied into Zoho CRM and rebuilt the rentals site. You can read about
+          that work in the <a href="/work/igrow/">IGrow case study</a>.
+        </p>
+        <p>
+          Before that I spent six years at Automattic. First, I was a Senior Technical Support
+          Engineer and Project Lead at WordPress.com, where I was named a "Distinguished&nbsp;HE":
+          one of the top 5 of 300+ Happiness Engineers (Automattic's customer support team) in a
+          quarter. Then I moved into product engineering as a Software Engineer on WooCommerce.com,
+          where I co-led the React rebuild of the{' '}
+          <a href="/work/woocommerce-marketplace/">WooCommerce.com Marketplace</a>.
+        </p>
+        <p>
+          Earlier, I was Technical Director of Illustrate Digital, a WordPress development agency in
+          Cardiff, for four years. Before that I was Customer Support Manager at Freestart PLC in
+          Wigan, managing a customer and technical support team.
+        </p>
+        <p>
+          I founded my own consultancy, devNel, in 2018. That's where projects like the{' '}
+          <a href="/work/quiver-cafe/">Quiver Café sites</a> come from.
+        </p>
+        <p>
+          I do my best work in a team, helping everyone else do theirs, and I'd rather build
+          something useful than something generic.
+        </p>
+      </div>
+    </div>
+    <figure class="about-intro__photo">
+      <picture>
+        <source
+          type="image/avif"
+          srcset="/images/kyle-nel-400.avif 400w, /images/kyle-nel-800.avif 800w"
+          sizes="24rem"
+        />
+        <img
+          src="/images/kyle-nel-400.webp"
+          srcset="/images/kyle-nel-400.webp 400w, /images/kyle-nel-800.webp 800w"
+          sizes="24rem"
+          width="400"
+          height="500"
+          alt="Kyle smiling in sunglasses, a light blue shirt and a patterned red bowtie"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+      <figcaption>You'll usually find me smiling and wearing a bowtie.</figcaption>
+    </figure>
+  </section>
+
+  <section class="container section" aria-labelledby="timeline-title" data-reveal>
+    <SectionHeading eyebrow="career" title="Career so far" id="timeline-title">
+      <p class="meta">
+        The full version is on my <a href="/cv/">CV</a>.
+      </p>
+    </SectionHeading>
+    <Timeline />
+  </section>
+
+  <section class="container section outside" aria-labelledby="outside-title" data-reveal>
+    <SectionHeading eyebrow="outside work" title="Outside work" id="outside-title" />
+    <div class="outside__grid">
+      {church && (
+        <div>
+          <h3>{church.organization.replace(/\s*\(.*\)$/, '')}</h3>
+          <p>
+            I'm a trustee at Freedom Church in Cape Town and a leader of volunteer teams, drawing on
+            20+ years of running live-production crews and technical experience.
+          </p>
+        </div>
+      )}
+      {degree && (
+        <div>
+          <h3>Education</h3>
+          <p>
+            {degree.studyType} {degree.area} ({degree.score}), {degree.institution}.
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-intro {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 56rem) {
+    .about-intro {
+      grid-template-columns: 8fr 4fr;
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+
+  .about-intro__photo {
+    max-width: 24rem;
+  }
+
+  .about-intro__photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border);
+    border-radius: var(--radius);
+  }
+
+  figcaption {
+    margin-block-start: var(--space-xs);
+    font-family: var(--font-display);
+    color: var(--text-muted);
+  }
+
+  .outside__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .outside__grid h3 {
+    margin-block-end: var(--space-2xs);
+  }
+
+  .outside__grid p {
+    max-width: var(--measure);
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+/**
+ * "Email me" link that never puts the address in the HTML.
+ * The address is stored reversed and base64-encoded; a few lines of JS build
+ * the mailto: link. Without JS the link falls back to the contact form.
+ */
+import { getSite } from '@/lib/content';
+
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = 'Email me', class: className } = Astro.props;
+const { email } = await getSite();
+const encoded = btoa([...email].reverse().join(''));
+---
+
+<a href="/contact/" class={className} data-email={encoded}>
+  {label}
+</a>
+
+<script>
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('a[data-email]')) {
+    const address = [...atob(link.dataset.email ?? '')].reverse().join('');
+    link.href = `mailto:${address}`;
+    link.removeAttribute('data-email');
+  }
+</script>

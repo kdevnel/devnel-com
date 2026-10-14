@@ -1,0 +1,53 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import ContactForm from '@/components/ContactForm.astro';
+import EmailLink from '@/components/EmailLink.astro';
+import { getSite, siteLink } from '@/lib/content';
+
+const site = await getSite();
+const linkedin = siteLink(site, 'linkedin');
+---
+
+<Base
+  title="Contact Kyle Nel"
+  description="Get in touch with me about a job opportunity, a freelance project or something else."
+>
+  <section class="container section contact">
+    <div class="contact__intro">
+      <SectionHeading eyebrow="contact" title="Get in touch" level="h1" />
+      <p class="lede">
+        Hiring, or have a project in mind? Send me a message and I'll get back to you.
+      </p>
+      <p>
+        You can also <EmailLink label="email me" /> directly, or find me on{' '}
+        <a href={linkedin.url}>LinkedIn</a>.
+      </p>
+      <p class="meta">
+        {site.location} · {site.timezone} · {site.availability}
+      </p>
+    </div>
+    <ContactForm />
+  </section>
+</Base>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .contact__intro {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    max-width: 32rem;
+  }
+
+  @media (min-width: 56rem) {
+    .contact {
+      grid-template-columns: 5fr 7fr;
+      column-gap: var(--space-2xl);
+    }
+  }
+</style>

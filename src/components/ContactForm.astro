@@ -1,0 +1,487 @@
+---
+/**
+ * Contact form with layered spam defences: Turnstile, a honeypot, a signed
+ * minimum time-to-submit, server-side validation and per-IP rate limiting.
+ *
+ * It's a normal POST form. On first interaction, JavaScript loads Turnstile
+ * and fetches the signed timestamp; on submit it waits for both, sends with
+ * fetch, and shows inline, accessible success and error states. An expired
+ * timestamp (e.g. after the laptop slept) is refreshed and retried once.
+ */
+import { TURNSTILE_SITE_KEY } from 'astro:env/client';
+import { MESSAGE_MAX, TOPICS } from '@/lib/contact/schema';
+import { getSite, siteLink } from '@/lib/content';
+
+const linkedin = siteLink(await getSite(), 'linkedin');
+---
+
+<div class="contact-form">
+  <!-- Shown via :target after a no-JS submission redirects back with an error. -->
+  <div class="target-messages">
+    <p id="error-invalid" role="alert">
+      Some fields need another look. Please try again.
+    </p>
+    <p id="error-expired" role="alert">
+      The form timed out. Please try again.
+    </p>
+    <p id="error-verify" role="alert">
+      I couldn't confirm you're human. The spam check needs JavaScript; you can also reach me on{' '}
+      <a href={linkedin.url}>LinkedIn</a>.
+    </p>
+    <p id="error-rate" role="alert">
+      You've sent a few messages already. Please try again in a while.
+    </p>
+    <p id="error-send" role="alert">
+      Your message couldn't be sent just now. Please try again in a few minutes.
+    </p>
+    <p id="error-config" role="alert">
+      The form isn't working right now. Please reach me on <a href={linkedin.url}>LinkedIn</a>{' '}
+      instead.
+    </p>
+  </div>
+
+  <noscript>
+    <p class="form-note">
+      This form uses JavaScript for its spam check. If it's turned off, reach me on{' '}
+      <a href={linkedin.url}>LinkedIn</a> instead.
+    </p>
+  </noscript>
+
+  <form
+    method="post"
+    action="/api/contact/"
+    novalidate
+    data-contact-form
+    data-sitekey={TURNSTILE_SITE_KEY}
+  >
+    <div class="fields">
+      <div class="field">
+        <label for="cf-name">Name</label>
+        <input
+          id="cf-name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          required
+          maxlength="100"
+          aria-describedby="cf-name-error"
+        />
+        <p class="field__error" id="cf-name-error"></p>
+      </div>
+
+      <div class="field">
+        <label for="cf-email">Email</label>
+        <input
+          id="cf-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          maxlength="254"
+          aria-describedby="cf-email-error"
+        />
+        <p class="field__error" id="cf-email-error"></p>
+      </div>
+
+      <div class="field field--wide">
+        <label for="cf-topic">
+          What's this about? <span class="optional">(optional)</span>
+        </label>
+        <select id="cf-topic" name="topic" aria-describedby="cf-topic-error">
+          <option value="">Choose one</option>
+          {Object.entries(TOPICS).map(([value, label]) => (
+            <option value={value}>{label}</option>
+          ))}
+        </select>
+        <p class="field__error" id="cf-topic-error"></p>
+      </div>
+
+      <div class="field field--wide">
+        <label for="cf-message">Message</label>
+        <textarea
+          id="cf-message"
+          name="message"
+          rows="6"
+          required
+          minlength="10"
+          maxlength={MESSAGE_MAX}
+          aria-describedby="cf-message-hint cf-message-error"
+        ></textarea>
+        <p class="field__hint" id="cf-message-hint">
+          Up to {MESSAGE_MAX.toLocaleString('en-GB')} characters and 2 links.{' '}
+          <span data-counter aria-hidden="true"></span>
+        </p>
+        <p class="field__error" id="cf-message-error"></p>
+      </div>
+    </div>
+
+    <!-- Honeypot: hidden from people and assistive tech; bots fill it in. -->
+    <div class="hp" aria-hidden="true">
+      <label for="cf-website">Leave this empty</label>
+      <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="ts" value="" />
+
+    <div class="turnstile" data-turnstile></div>
+
+    <div class="actions">
+      <button class="button" type="submit">
+        Send message
+      </button>
+      <p class="form-status" role="status" aria-live="polite" data-status></p>
+    </div>
+  </form>
+
+  <div class="form-success" tabindex="-1" hidden data-success>
+    <h3>Message received.</h3>
+    <p>Thanks for getting in touch. I'll get back to you soon.</p>
+  </div>
+</div>
+
+<script>
+  import { countLinks, MAX_LINKS, MESSAGE_MAX, MIN_SECONDS } from '@/lib/contact/limits';
+
+  type Turnstile = {
+    render: (el: HTMLElement, options: Record<string, unknown>) => string;
+    reset: (id?: string) => void;
+  };
+  declare global {
+    interface Window {
+      turnstile?: Turnstile;
+      onTurnstileReady?: () => void;
+    }
+  }
+
+  type Result = { ok: boolean; code?: string; message?: string; errors?: Record<string, string> };
+
+  const ENDPOINT = '/api/contact/';
+  const SCRIPT =
+    'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
+  const MESSAGES: Record<string, string> = {
+    name: 'Please tell me your name.',
+    email: 'Please enter a valid email address.',
+    message: 'Please write at least 10 characters.',
+  };
+
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const within = <T,>(promise: Promise<T>, ms: number) =>
+    Promise.race([promise, sleep(ms).then(() => undefined)]);
+
+  let turnstileLoad: Promise<Turnstile> | undefined;
+  function loadTurnstile(): Promise<Turnstile> {
+    turnstileLoad ??= new Promise((resolve, reject) => {
+      window.onTurnstileReady = () => resolve(window.turnstile!);
+      const script = document.createElement('script');
+      script.src = SCRIPT;
+      script.async = true;
+      script.onerror = reject;
+      document.head.append(script);
+    });
+    return turnstileLoad;
+  }
+
+  function setup(form: HTMLFormElement) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const success = form.parentElement!.querySelector<HTMLElement>('[data-success]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const tsField = form.querySelector<HTMLInputElement>('input[name=ts]')!;
+    const message = form.querySelector<HTMLTextAreaElement>('textarea[name=message]')!;
+    const counter = form.querySelector<HTMLElement>('[data-counter]')!;
+    const widget = form.querySelector<HTMLElement>('[data-turnstile]')!;
+    const sitekey = form.dataset.sitekey;
+
+    let widgetId: string | undefined;
+    let tokenReady: Promise<void> | undefined;
+    // Resolves once Turnstile has a token for the current attempt.
+    let human!: Promise<void>;
+    let markHuman!: () => void;
+    const awaitHuman = () => (human = new Promise((r) => (markHuman = r)));
+    awaitHuman();
+
+    /** Fetches a fresh signed timestamp. Never throws. */
+    async function refreshToken() {
+      try {
+        const res = await fetch(ENDPOINT, { headers: { Accept: 'application/json' } });
+        const data = (await res.json()) as { token?: string };
+        tsField.value = data.token ?? '';
+      } catch {
+        tsField.value = '';
+      }
+    }
+
+    // The spam checks load on first interaction with the form, not on page
+    // load, so they never cost anything for people who are only reading.
+    function start() {
+      if (tokenReady) return;
+      tokenReady = refreshToken();
+      // Keep the timestamp well inside its 2-hour lifetime on long visits.
+      setInterval(refreshToken, 60 * 60 * 1000);
+      if (!sitekey) {
+        markHuman();
+        return;
+      }
+      loadTurnstile()
+        .then((t) => {
+          widgetId = t.render(widget, {
+            sitekey,
+            theme: 'auto',
+            size: 'flexible',
+            callback: () => markHuman(),
+            'expired-callback': awaitHuman,
+          });
+        })
+        .catch(() => {
+          status.textContent = "The spam check didn't load. Please refresh and try again.";
+        });
+    }
+
+    for (const type of ['focusin', 'pointerdown', 'keydown']) {
+      form.addEventListener(type, start, { once: true });
+    }
+
+    message.addEventListener('input', () => {
+      const left = MESSAGE_MAX - message.value.length;
+      counter.textContent = left < 200 ? `${left} left.` : '';
+    });
+
+    function showError(name: string, text: string) {
+      const input = form.elements.namedItem(name) as HTMLInputElement | null;
+      const slot = form.querySelector<HTMLElement>(`#cf-${name}-error`);
+      if (!input || !slot) return;
+      slot.textContent = text;
+      input.setAttribute('aria-invalid', String(Boolean(text)));
+    }
+
+    function clientErrors(): Record<string, string> {
+      const errors: Record<string, string> = {};
+      for (const name of ['name', 'email', 'message']) {
+        const input = form.elements.namedItem(name) as HTMLInputElement;
+        if (!input.value.trim() || !input.checkValidity()) errors[name] = MESSAGES[name]!;
+      }
+      if (!errors.message && countLinks(message.value) > MAX_LINKS) {
+        errors.message = `Please include no more than ${MAX_LINKS} links.`;
+      }
+      return errors;
+    }
+
+    function applyErrors(errors: Record<string, string>) {
+      for (const name of ['name', 'email', 'topic', 'message']) showError(name, errors[name] ?? '');
+      const first = Object.keys(errors)[0];
+      if (first) (form.elements.namedItem(first) as HTMLElement | null)?.focus();
+    }
+
+    async function post(): Promise<Result> {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      return (await res.json()) as Result;
+    }
+
+    /** Sends once; if the timestamp has expired (e.g. after sleep), refreshes and retries. */
+    async function send(): Promise<Result | 'not-human'> {
+      for (let attempt = 0; ; attempt++) {
+        await tokenReady;
+        if (!tsField.value) await refreshToken();
+        if (
+          (await within(
+            human.then(() => true),
+            15_000,
+          )) !== true
+        )
+          return 'not-human';
+
+        const result = await post();
+        // A Turnstile token is single-use, so get a new one after any attempt.
+        if (widgetId && window.turnstile) {
+          awaitHuman();
+          window.turnstile.reset(widgetId);
+        }
+        if (result.code !== 'expired' || attempt > 0) return result;
+
+        status.textContent = 'Refreshing the form…';
+        await refreshToken();
+        await sleep(MIN_SECONDS * 1000 + 200); // the server's minimum time-to-submit
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      start();
+      const errors = clientErrors();
+      applyErrors(errors);
+      if (Object.keys(errors).length) {
+        status.textContent = 'Some fields need another look.';
+        return;
+      }
+
+      button.disabled = true;
+      status.textContent = 'Sending…';
+      try {
+        const result = await send();
+        if (result === 'not-human') {
+          status.textContent = 'Please complete the spam check above, then send again.';
+          return;
+        }
+        if (result.ok) {
+          form.hidden = true;
+          success.hidden = false;
+          success.focus();
+          return;
+        }
+        applyErrors(result.errors ?? {});
+        status.textContent = result.message ?? 'Something went wrong. Please try again.';
+      } catch {
+        status.textContent = 'Something went wrong. Please check your connection and try again.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-contact-form]').forEach(setup);
+</script>
+
+<style>
+  .contact-form {
+    --field-bg: var(--paper);
+    --field-text: var(--ink);
+    --field-border: var(--stone);
+    max-width: 40rem;
+  }
+
+  .fields {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-3xs);
+    align-content: start;
+  }
+
+  .field--wide {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-weight: 600;
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.6em 0.75em;
+    background: var(--field-bg);
+    color: var(--field-text);
+    border: 1px solid var(--field-border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-color: var(--sage-deep);
+  }
+
+  [aria-invalid='true'] {
+    border: 2px solid var(--error);
+  }
+
+  .field__hint {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .field__error {
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--error);
+  }
+
+  .field__error:empty {
+    display: none;
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .turnstile {
+    margin-block-start: var(--space-m);
+  }
+
+  .turnstile:empty {
+    display: none;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s) var(--space-m);
+    margin-block-start: var(--space-m);
+  }
+
+  .form-status {
+    font-weight: 600;
+  }
+
+  .form-status:empty {
+    display: none;
+  }
+
+  .form-success {
+    border-inline-start: 4px solid var(--accent);
+    padding: var(--space-s) var(--space-m);
+  }
+
+  .form-success h3 {
+    margin-block-end: var(--space-2xs);
+  }
+
+  .form-success:focus {
+    outline: none;
+  }
+
+  .target-messages p {
+    display: none;
+    margin-block-end: var(--space-m);
+    padding: var(--space-xs) var(--space-s);
+    border: 2px solid var(--error);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .target-messages p:target {
+    display: block;
+  }
+
+  .form-note {
+    margin-block-end: var(--space-m);
+    color: var(--text-muted);
+  }
+</style>

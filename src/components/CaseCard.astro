@@ -1,0 +1,109 @@
+---
+import type { CaseStudy } from '@/lib/content';
+
+interface Props {
+  study: CaseStudy;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { study, headingLevel: Heading = 'h3' } = Astro.props;
+const { title, summary, stack, client, order, cover } = study.data;
+const href = `/work/${study.id}/`;
+---
+
+<article class="card case-card">
+  <p class="meta">{client}</p>
+  {cover && (
+    <picture class="case-card__cover">
+      <source
+        type="image/avif"
+        srcset={`/images/work/${cover}-480.avif 480w, /images/work/${cover}-960.avif 960w`}
+        sizes="(min-width: 64rem) 24rem, 100vw"
+      />
+      {/* Decorative: the title link already names the card. */}
+      <img
+        src={`/images/work/${cover}-480.webp`}
+        srcset={`/images/work/${cover}-480.webp 480w, /images/work/${cover}-960.webp 960w`}
+        sizes="(min-width: 64rem) 24rem, 100vw"
+        width="480"
+        height="300"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+  )}
+  <Heading class:list={['case-card__title', `vt-${order}`]}>
+    <a href={href}>{title}</a>
+  </Heading>
+  <p class="case-card__summary">{summary}</p>
+  <ul class="tags" role="list" aria-label="Stack">
+    {stack.slice(0, 4).map((tech) => (
+      <li>{tech}</li>
+    ))}
+  </ul>
+  <p class="case-card__more" aria-hidden="true">
+    Read case study <span class="arrow">→</span>
+  </p>
+</article>
+
+<style>
+  .case-card {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  /* Fixed 16:10 box so nothing shifts while the screenshot loads. */
+  .case-card__cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border: var(--border);
+    border-radius: var(--radius);
+    margin-block: var(--space-2xs);
+  }
+
+  /* Scales with the card, so unbreakable words like "WooCommerce.com" fit at
+     every width and zoom level. */
+  .case-card__title {
+    font-size: clamp(1.25rem, 8cqi, var(--step-2));
+    overflow-wrap: break-word;
+  }
+
+  /* The whole card is clickable through the title link. */
+  .case-card__title a {
+    color: var(--heading);
+    text-decoration: none;
+  }
+
+  .case-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+  }
+
+  .case-card__title a:focus-visible {
+    outline: none;
+  }
+
+  .case-card__title a:focus-visible::after {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .case-card__summary {
+    flex: 1;
+  }
+
+  .case-card__more {
+    margin-block-start: var(--space-2xs);
+    font-weight: 600;
+    color: var(--link-alt);
+  }
+</style>

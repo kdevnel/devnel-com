@@ -1,0 +1,18 @@
+---
+import Base from '@/layouts/Base.astro';
+import CvView from '@/components/CvView.astro';
+import { profilePageJsonLd } from '@/lib/seo';
+---
+
+<Base
+  title="CV: Kyle Nel, technical support lead"
+  description="Kyle Nel's CV: technical support lead and support engineer. Five years of enterprise and VIP escalations at WordPress.com, team management, and tools for customer-facing teams."
+  type="profile"
+  jsonLd={profilePageJsonLd(
+    new URL(Astro.url.pathname, Astro.site),
+    'CV: Kyle Nel, technical support lead',
+    { cv: true },
+  )}
+>
+  <CvView track="support" />
+</Base>

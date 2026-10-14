@@ -1,0 +1,108 @@
+---
+title: WooCommerce.com Marketplace
+slug: woocommerce-marketplace
+summary: 'Co-led the React rebuild of the WooCommerce.com Marketplace, which is still the live marketplace today.'
+client: Automattic (WooCommerce.com)
+role: Software Engineer (Full Stack)
+period: 'Sep 2023 – Apr 2025'
+stack:
+  - React
+  - TypeScript
+  - PHP
+  - WordPress
+  - NGINX
+  - Algolia
+links:
+  - label: The live Marketplace
+    url: https://woocommerce.com/products/
+cover: woocommerce-marketplace
+coverAlt: "The WooCommerce Marketplace inside a store's WordPress dashboard: curated extensions shown as cards with icons, prices and star ratings."
+order: 2
+featured: true
+---
+
+import ArchDiagram from '@/components/ArchDiagram.astro';
+
+## The problem
+
+The WooCommerce.com Marketplace is where store owners find and buy extensions
+and themes for WooCommerce. It was built on an older inflexible WordPress Admin
+system and needed rebuilding to provide more control, better features and to
+dog-food more modern WordPress and WooCommerce Admin features.
+
+## Constraints
+
+- A team of 5 people.
+- WooCommerce.com Marketplace extensions had to continue to be features in the
+  new system. These were fed directly by WooCommerce.com APIs and needed to stay
+  perfomant on any WordPress site regardless of hosting.
+- The in-app marketplace is part of a plugin installed on WordPress/WooCommerce
+  sites. These sites had to continue to perform in all hosting situations out of
+  our control.
+- Privacy in a self-hosted WordPress site had to be respected, while still
+  collecting useful and privacy-respecting data.
+- The marketplace listings and pinned sponsored listing were powered by Algolia.
+  The same pinning and ordering rules needed to continue to work.
+
+## What I built
+
+**I co-led the React rebuild of the Marketplace** and architected two parts of it:
+
+- **Modular product-card components**, so the same building blocks could be
+  reused across the Marketplace.
+- **Interaction tracking**, so the team could see how people actually used it.
+- WooCommerce.com user account linking and controls were integrated for
+  convenience.
+
+It's still the live Marketplace today.
+
+<ArchDiagram
+  title="WooCommerce.com Marketplace front end"
+  description="Store owners browse the Marketplace, a React front end built from modular product-card components. Interaction tracking records how people use it. Product data comes from WooCommerce.com, which runs on WordPress and PHP."
+  nodes={[
+    { id: 'shoppers', label: 'Store owners', sub: 'browsing extensions', col: 1, row: 0 },
+    { id: 'cards', label: 'Product cards', sub: 'modular components', col: 0, row: 1 },
+    {
+      id: 'market',
+      label: 'Marketplace',
+      sub: 'React + TypeScript',
+      col: 1,
+      row: 1,
+      primary: true,
+    },
+    { id: 'tracking', label: 'Interaction tracking', sub: 'usage events', col: 2, row: 1 },
+    { id: 'woo', label: 'WooCommerce.com', sub: 'WordPress + PHP', col: 1, row: 2 },
+  ]}
+  edges={[
+    { from: 'shoppers', to: 'market' },
+    { from: 'cards', to: 'market' },
+    { from: 'market', to: 'tracking' },
+    { from: 'woo', to: 'market', label: 'product data' },
+  ]}
+/>
+
+### Related work on WooCommerce.com
+
+- **An AI proxy integration** used across WooCommerce.com, so AI features
+  shipped one consistent way, with prompt-level control, usage tracking and
+  cost reporting.
+- **A CLI tool that removed 40%+ of plugin-based redirects** by moving them to NGINX.
+
+## Stack
+
+React and TypeScript for the Marketplace front end, PHP and WordPress behind
+it, NGINX for redirects, and Algolia.
+
+## Results
+
+- The rebuilt Marketplace is **still the live Marketplace** in WooCommerce
+  installs.
+- **40%+ of plugin-based redirects** moved out of PHP and into NGINX (WordPress
+  VIP).
+
+## What I'd do differently
+
+- This project required a lot of exploratory work and research spikes to figure
+  out the best path forward. Due to time constraints we opted to run these
+  alongside the rest of the work. I would likely advocate for more up front
+  research time.

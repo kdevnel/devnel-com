@@ -1,0 +1,78 @@
+/* ArchDiagram (src/components/ArchDiagram.astro). */
+.diagram {
+  margin-block: var(--space-l);
+  max-width: var(--measure);
+}
+
+.diagram__scroll {
+  overflow-x: auto;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  padding: var(--space-s);
+}
+
+.diagram svg {
+  width: 100%;
+  /* Below this the labels get too small to read, so the figure scrolls instead. */
+  min-width: 29rem;
+  height: auto;
+  font-family: var(--font-body);
+}
+
+.diagram line {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+
+.diagram .diagram__head {
+  fill: var(--text-muted);
+}
+
+.diagram rect {
+  fill: var(--bg);
+  stroke: var(--rule);
+  stroke-width: 1.5;
+}
+
+.diagram .diagram__node--primary rect {
+  fill: var(--accent);
+  stroke: var(--sage-deep);
+}
+
+.diagram text {
+  text-anchor: middle;
+}
+
+.diagram .diagram__label {
+  font-size: 17px;
+  font-weight: 600;
+  fill: var(--text);
+}
+
+.diagram .diagram__node--primary .diagram__label,
+.diagram .diagram__node--primary .diagram__sub {
+  fill: var(--ink);
+}
+
+.diagram .diagram__sub {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  fill: var(--text-muted);
+}
+
+.diagram .diagram__edge-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--text-muted);
+  paint-order: stroke;
+  stroke: var(--bg-alt);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.diagram figcaption {
+  margin-block-start: var(--space-xs);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}

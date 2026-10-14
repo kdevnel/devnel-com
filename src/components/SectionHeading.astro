@@ -1,0 +1,25 @@
+---
+/** Mono angle-bracket eyebrow plus a serif heading: <selected work> / Selected work. */
+interface Props {
+  eyebrow: string;
+  title: string;
+  id?: string;
+  level?: 'h1' | 'h2';
+}
+
+const { eyebrow, title, id, level: Heading = 'h2' } = Astro.props;
+---
+
+<header class="section-heading">
+  <span class="eyebrow" aria-hidden="true">
+    &lt;{eyebrow}&gt;
+  </span>
+  <Heading id={id}>{title}</Heading>
+  <slot />
+</header>
+
+<style>
+  .section-heading {
+    margin-block-end: var(--space-l);
+  }
+</style>

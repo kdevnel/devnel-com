@@ -1,0 +1,42 @@
+---
+/**
+ * A deliberately obvious placeholder for content Kyle still needs to supply.
+ * Every instance is listed in the README; search the codebase for "TODO(kyle)".
+ */
+interface Props {
+  inline?: boolean;
+}
+
+const { inline = false } = Astro.props;
+// A div (not a p) so MDX can wrap multi-line content in paragraphs.
+const Tag = inline ? 'span' : 'div';
+---
+
+<Tag class:list={['todo', { 'todo--inline': inline }]}>
+  <slot />
+</Tag>
+
+<style>
+  .todo {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text);
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent 0 8px,
+      color-mix(in srgb, var(--accent) 35%, transparent) 8px 16px
+    );
+    border: 1px dashed var(--text-muted);
+    border-radius: var(--radius);
+    padding: var(--space-2xs) var(--space-xs);
+  }
+
+  .todo :global(p) {
+    margin: 0;
+  }
+
+  .todo--inline {
+    display: inline;
+    padding: 0.05em 0.35em;
+  }
+</style>

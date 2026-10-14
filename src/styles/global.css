@@ -1,0 +1,577 @@
+@import './tokens.css';
+@import './fonts.css';
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--space-l);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+li,
+h1,
+h2,
+h3,
+h4,
+blockquote {
+  overflow-wrap: break-word;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+/* ---------- Type ---------- */
+h1,
+h2,
+h3,
+.display {
+  font-family: var(--font-display);
+  font-weight: 400; /* Quando has a single weight: hierarchy comes from size and colour */
+  line-height: var(--leading-heading);
+  color: var(--heading);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-4);
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: var(--step-3);
+}
+
+h3 {
+  font-size: var(--step-1);
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: var(--step-0);
+  font-weight: 650;
+}
+
+strong,
+b {
+  font-weight: 650;
+}
+
+small {
+  font-size: var(--step--1);
+}
+
+code,
+kbd,
+samp,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+/* ---------- Links: sage text, low "highlighter" underline in sun ---------- */
+a {
+  color: var(--link);
+  text-decoration-line: underline;
+  text-decoration-color: var(--underline);
+  text-decoration-thickness: 0.22em;
+  text-underline-offset: -0.08em;
+  text-decoration-skip-ink: none;
+  transition:
+    text-decoration-thickness var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration-thickness: 0.5em;
+}
+
+.surface-alt a,
+.card a {
+  color: var(--link-alt);
+}
+
+/* ---------- Focus ---------- */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---------- Utilities ---------- */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.container {
+  width: min(100% - 2 * var(--gutter), var(--page-max));
+  margin-inline: auto;
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.flow > * + * {
+  margin-block-start: var(--flow-space, 1em);
+}
+
+.surface-alt {
+  background: var(--bg-alt);
+  --heading: var(--heading-alt);
+}
+
+.section {
+  padding-block: var(--space-2xl);
+}
+
+.rule {
+  border: 0;
+  border-top: var(--border);
+}
+
+/* Angle-bracket eyebrow: <selected work> */
+.eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  margin-block-end: var(--space-xs);
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-size: var(--step--1);
+}
+
+/* Stack tags.
+   Every list with list-style: none also gets role="list" in its markup:
+   Safari drops list semantics from bullet-less lists (outside <nav>), so
+   VoiceOver stops announcing "list, N items". Validators call the role
+   redundant; it isn't here. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  padding: 0;
+  list-style: none;
+}
+
+.tags li {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 0.15em 0.55em;
+}
+
+/* ---------- Buttons ---------- */
+.button {
+  --_bg: var(--accent);
+  --_fg: var(--on-accent);
+  --_border: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  padding: 0.6em 1.25em;
+  border: 2px solid var(--_border);
+  border-radius: var(--radius);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--step-0);
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.button:hover {
+  --_bg: #f7cc6f; /* --sun darkened slightly; --ink on it is 9.0:1 */
+  --_border: #f7cc6f;
+  color: var(--_fg);
+}
+
+.button:focus-visible {
+  outline-color: var(--focus);
+}
+
+.button--secondary {
+  --_bg: transparent;
+  --_fg: var(--link);
+  --_border: var(--link);
+}
+
+.button--secondary:hover {
+  --_bg: transparent;
+  --_fg: var(--link-hover);
+  --_border: var(--link-hover);
+  color: var(--_fg);
+}
+
+.button[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+/* ---------- Cards: flat, 1px stone border, no shadow ---------- */
+.card {
+  position: relative;
+  background: var(--bg-alt);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-m);
+  --heading: var(--heading-alt);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: var(--link);
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.card:hover .arrow,
+a:hover > .arrow,
+a:focus-visible > .arrow {
+  transform: translateX(4px);
+}
+
+/* ---------- Slash pattern ( // \\ ) as a recolourable mask ---------- */
+:root {
+  --slash-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='40'%3E%3Cpath d='M4 18 10 4M9 18 15 4M28 4l6 14M33 4l6 14M4 24l6 14M9 24l6 14M28 38l6-14M33 38l6-14' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.pattern {
+  position: relative;
+  isolation: isolate;
+}
+
+.pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--pattern);
+  opacity: var(--pattern-opacity);
+  -webkit-mask-image: var(--slash-mask);
+  mask-image: var(--slash-mask);
+  -webkit-mask-size:
+    48px 40px,
+    100% 100%;
+  mask-size:
+    48px 40px,
+    100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  mask-repeat: repeat, no-repeat;
+  pointer-events: none;
+}
+
+/* ---------- Prose (case studies, about) ---------- */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-block-start: 1.1em;
+}
+
+.prose h2 {
+  font-size: var(--step-2);
+  margin-block-start: 2.2em;
+}
+
+.prose h3 {
+  margin-block-start: 1.8em;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-block-start: 0.6em;
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: 1.25em;
+}
+
+.prose li + li {
+  margin-block-start: 0.4em;
+}
+
+.prose li::marker {
+  color: var(--text-muted);
+}
+
+.prose blockquote {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--heading);
+  border-inline-start: 3px solid var(--accent);
+  padding-inline-start: var(--space-m);
+}
+
+/* ---------- Motion ---------- */
+/*
+ * "Straighten the bowtie": a tilt, a smaller counter-swing, then it settles.
+ * Used on hover by the logo and every standalone [>·<] mark. 8° rather than
+ * 2–3° because the header mark is ~20px tall, where 3° moves it half a pixel.
+ */
+:root {
+  --wiggle: straighten 700ms ease-in-out 1;
+}
+
+@keyframes straighten {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  55% {
+    transform: rotate(5deg);
+  }
+  80% {
+    transform: rotate(-2deg);
+  }
+}
+
+/*
+ * Shared-element transition between a case-study card's title and the case
+ * study's heading. Named by the study's `order` (1–12) rather than an inline
+ * style attribute, which the CSP doesn't allow.
+ */
+.vt-1 {
+  view-transition-name: cs-1;
+}
+
+.vt-2 {
+  view-transition-name: cs-2;
+}
+
+.vt-3 {
+  view-transition-name: cs-3;
+}
+
+.vt-4 {
+  view-transition-name: cs-4;
+}
+
+.vt-5 {
+  view-transition-name: cs-5;
+}
+
+.vt-6 {
+  view-transition-name: cs-6;
+}
+
+.vt-7 {
+  view-transition-name: cs-7;
+}
+
+.vt-8 {
+  view-transition-name: cs-8;
+}
+
+.vt-9 {
+  view-transition-name: cs-9;
+}
+
+.vt-10 {
+  view-transition-name: cs-10;
+}
+
+.vt-11 {
+  view-transition-name: cs-11;
+}
+
+.vt-12 {
+  view-transition-name: cs-12;
+}
+
+/* Sections fade and rise once as they enter the viewport (script in Base.astro). */
+@media (prefers-reduced-motion: no-preference) {
+  .js-reveal [data-reveal] {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .js-reveal [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Native cross-document view transitions: a gentle crossfade, no JS. */
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 250ms;
+    animation-timing-function: var(--ease);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 15mm;
+  }
+
+  :root {
+    --bg: #fff;
+    --bg-alt: #fff;
+    --text: #000;
+    --heading: var(--sage-deep);
+    --heading-alt: var(--sage-deep);
+    --text-muted: #444;
+    --link: var(--sage-deep);
+    --link-alt: var(--sage-deep);
+    --underline: transparent;
+    --rule: #bbb;
+    font-size: 10.5pt;
+  }
+
+  .no-print,
+  .site-header,
+  .site-footer,
+  .skip-link {
+    display: none !important;
+  }
+
+  .pattern::before {
+    display: none;
+  }
+
+  /* Sections that haven't scrolled into view yet must still print. */
+  .js-reveal [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  li,
+  .avoid-break {
+    break-inside: avoid;
+  }
+}

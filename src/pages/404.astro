@@ -1,0 +1,49 @@
+---
+import Base from '@/layouts/Base.astro';
+import Mark from '@/components/brand/Mark.astro';
+---
+
+<Base title="Page not found" description="This page doesn't exist. Head back home." noindex>
+  <section class="container section not-found">
+    <Mark class="not-found__mark" label="devNel mark: a bowtie made of code brackets" />
+    <h1>This page has come undone.</h1>
+    <p class="lede">
+      There's no page at this address (error&nbsp;404). It may have moved, or the link has a typo.
+      Let's get you back home.
+    </p>
+    <div class="button-row">
+      <a class="button" href="/">
+        Go home
+      </a>
+      <a class="button button--secondary" href="/#work">
+        See my work
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-m);
+  }
+
+  .not-found :global(.not-found__mark) {
+    --mark-width: 4.5rem;
+  }
+
+  .not-found h1,
+  .not-found .lede {
+    margin: 0;
+  }
+
+  /* The headline gets the full width; only the sentence keeps a measure. */
+  .not-found h1 {
+    text-wrap: balance;
+  }
+
+  .not-found .lede {
+    max-width: 40rem;
+  }
+</style>

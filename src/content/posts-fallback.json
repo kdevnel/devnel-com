@@ -1,0 +1,38 @@
+[
+  {
+    "id": 35118,
+    "date": "2026-02-24T10:36:56",
+    "link": "https://devnel.blog/2026/02/24/fixing-wordpress-redirect-issues-with-nginx-fastcgi-and-http-3/",
+    "title": {
+      "rendered": "Fixing WordPress Redirect Issues with Nginx, FastCGI and HTTP/3"
+    },
+    "excerpt": {
+      "rendered": "<p>TL;DR Problem: WordPress sites running on Nginx with HTTP/3 may experience broken redirects that malform to https:/// instead of the correct domain. Root Cause: Nginx doesn&#8217;t properly pass the ?HTTP_HOST header to PHP through FastCGI when using HTTP/3, causing WordPress to generate invalid redirect URLs. Quick Fix: Add this single line to your Nginx configuration: [&hellip;]</p>\n",
+      "protected": false
+    }
+  },
+  {
+    "id": 2369,
+    "date": "2025-05-13T15:09:27",
+    "link": "https://devnel.blog/2025/05/13/web-components-vs-react/",
+    "title": {
+      "rendered": "Web Components vs. React"
+    },
+    "excerpt": {
+      "rendered": "<p>Recently, a friend of mine Dan Q shared an interesting post about using a Web Component instead of React to simplify a particular problem. He shared this post: In Dan&#8217;s words: What I found myself thinking was… man, this is chunky. React is… not the right tool for this job. I tend to find myself [&hellip;]</p>\n",
+      "protected": false
+    }
+  },
+  {
+    "id": 1477,
+    "date": "2024-12-05T08:04:44",
+    "link": "https://devnel.blog/2024/12/05/step-by-step-mamp-web-server-configuration-for-python-cgi-scripts-explained-on-macos/",
+    "title": {
+      "rendered": "Step-by-step: MAMP web server Configuration for Python CGI Scripts Explained on MacOS"
+    },
+    "excerpt": {
+      "rendered": "<p>This content details a process for configuring MAMP to run Python CGI scripts on a local web server. It outlines steps including creating a cgi-bin directory, modifying Apache settings to allow CGI execution, ensuring Python installation, setting file permissions, and writing a basic script. The setup aims to simplify web server configuration for beginners.</p>\n",
+      "protected": false
+    }
+  }
+]

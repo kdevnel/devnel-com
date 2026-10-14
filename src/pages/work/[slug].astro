@@ -1,0 +1,292 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '@/layouts/Base.astro';
+// ArchDiagram's styles: see the note in ArchDiagram.astro.
+import '@/styles/diagram.css';
+import {
+  getAdjacentCaseStudies,
+  getCaseStudies,
+  renderCaseStudy,
+  type CaseStudy,
+} from '@/lib/content';
+import { caseStudyJsonLd } from '@/lib/seo';
+
+export const getStaticPaths = (async () => {
+  const studies = await getCaseStudies();
+  return studies.map((study) => ({ params: { slug: study.id }, props: { study } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const { title, summary, client, role, period, stack, links, order, cover, coverAlt } = study.data;
+const { Content } = await renderCaseStudy(study);
+const { previous, next } = await getAdjacentCaseStudies(study.id);
+
+const ogImage = `/og/work/${study.id}.png`;
+const jsonLd = caseStudyJsonLd(
+  study,
+  new URL(Astro.url.pathname, Astro.site),
+  new URL(ogImage, Astro.site),
+);
+---
+
+<Base
+  title={`${title} · Case study`}
+  description={summary}
+  type="article"
+  image={ogImage}
+  imageAlt={`Case study: ${title}`}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="cs-header pattern">
+      <div class="container cs-header__grid">
+        <div class="cs-header__main">
+          <span class="eyebrow" aria-hidden="true">
+            &lt;case study&gt;
+          </span>
+          <h1 class={`vt-${order}`}>{title}</h1>
+          <p class="lede">{summary}</p>
+        </div>
+        <aside class="cs-header__meta" aria-label="Project details">
+          <dl>
+            <div>
+              <dt>Client</dt>
+              <dd>{client}</dd>
+            </div>
+            <div>
+              <dt>Role</dt>
+              <dd>{role}</dd>
+            </div>
+            <div>
+              <dt>Period</dt>
+              <dd>{period}</dd>
+            </div>
+          </dl>
+          <ul class="tags" role="list" aria-label="Stack">
+            {stack.map((tech) => (
+              <li>{tech}</li>
+            ))}
+          </ul>
+          {links.length > 0 && (
+            <ul class="cs-header__links" role="list">
+              {links.map((link) => (
+                <li>
+                  <a href={link.url}>
+                    {link.label} <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+      </div>
+    </header>
+
+    <div class="container section">
+      {cover && coverAlt && (
+        <picture class="cs-hero">
+          {/* Phones get the tighter card crop: the wide shot is unreadable there. */}
+          <source
+            media="(max-width: 40rem)"
+            type="image/avif"
+            srcset={`/images/work/${cover}-480.avif 480w, /images/work/${cover}-960.avif 960w`}
+            sizes="100vw"
+            width="480"
+            height="300"
+          />
+          <source
+            media="(max-width: 40rem)"
+            type="image/webp"
+            srcset={`/images/work/${cover}-480.webp 480w, /images/work/${cover}-960.webp 960w`}
+            sizes="100vw"
+            width="480"
+            height="300"
+          />
+          <source
+            type="image/avif"
+            srcset={`/images/work/${cover}-hero-800.avif 800w, /images/work/${cover}-hero-1200.avif 1200w, /images/work/${cover}-hero-2000.avif 2000w`}
+            sizes="(min-width: 76rem) 72rem, 100vw"
+          />
+          <img
+            src={`/images/work/${cover}-hero-1200.webp`}
+            srcset={`/images/work/${cover}-hero-800.webp 800w, /images/work/${cover}-hero-1200.webp 1200w, /images/work/${cover}-hero-2000.webp 2000w`}
+            sizes="(min-width: 76rem) 72rem, 100vw"
+            width="1200"
+            height="640"
+            alt={coverAlt}
+            decoding="async"
+          />
+        </picture>
+      )}
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    <nav class="container cs-pager" aria-label="More case studies">
+      {previous ? (
+        <a href={`/work/${previous.id}/`} rel="prev" class="cs-pager__link">
+          <span class="eyebrow">&lt;previous&gt;</span>
+          <span class="cs-pager__title">
+            <span class="arrow" aria-hidden="true">
+              ←
+            </span>{' '}
+            {previous.data.title}
+          </span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a href={`/work/${next.id}/`} rel="next" class="cs-pager__link cs-pager__link--next">
+          <span class="eyebrow">&lt;next&gt;</span>
+          <span class="cs-pager__title">
+            {next.data.title}{' '}
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+          </span>
+        </a>
+      )}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .cs-header {
+    --pattern: var(--stone);
+    --pattern-opacity: 0.3;
+    --text-muted: var(--muted-on-pattern);
+    background: var(--bg-alt);
+    --heading: var(--heading-alt);
+    --link: var(--link-alt);
+    padding-block: var(--space-l) var(--space-xl);
+  }
+
+  .cs-header::before {
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-image: var(--slash-mask), linear-gradient(to left, #000 0%, transparent 45%);
+    mask-image: var(--slash-mask), linear-gradient(to left, #000 0%, transparent 45%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .cs-header {
+      --pattern: var(--sage);
+    }
+  }
+
+  .cs-header__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .cs-header__main {
+    display: grid;
+    gap: var(--space-s);
+    max-width: 44rem;
+  }
+
+  .cs-header__main .eyebrow {
+    margin: 0;
+  }
+
+  .cs-header__meta {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  dl {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .cs-header__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    padding: 0;
+    list-style: none;
+    font-weight: 600;
+  }
+
+  @media (min-width: 56rem) {
+    .cs-header__grid {
+      grid-template-columns: 8fr 4fr;
+      column-gap: var(--space-xl);
+      align-items: center;
+    }
+
+    .cs-header__meta {
+      border-inline-start: var(--border);
+      padding-inline-start: var(--space-l);
+    }
+  }
+
+  .cs-hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border);
+    border-radius: var(--radius);
+    margin-block-end: var(--space-xl);
+  }
+
+  .cs-pager {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    padding-block-start: var(--space-l);
+    border-top: var(--border);
+  }
+
+  .cs-pager__link {
+    display: grid;
+    gap: var(--space-3xs);
+    text-decoration: none;
+  }
+
+  .cs-pager__link .eyebrow {
+    margin: 0;
+  }
+
+  .cs-pager__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .cs-pager__link:hover .cs-pager__title {
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-decoration-thickness: 0.3em;
+    text-underline-offset: -0.08em;
+  }
+
+  .cs-pager__link--next {
+    text-align: end;
+    justify-items: end;
+  }
+
+  .cs-pager__link:first-child .arrow {
+    display: inline-block;
+  }
+
+  .cs-pager__link:first-child:hover .arrow {
+    transform: translateX(-4px);
+  }
+
+  .cs-pager__link--next:hover .arrow {
+    transform: translateX(4px);
+  }
+</style>

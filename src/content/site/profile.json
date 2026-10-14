@@ -1,0 +1,20 @@
+{
+  "name": "Kyle Nel",
+  "brand": "devNel",
+  "role": "Full-stack engineer and technical support lead",
+  "tagline": "full-stack engineer",
+  "email": "kyle@devnel.com",
+  "location": "Cape Town",
+  "timezone": "UTC+2",
+  "citizenship": "SA & UK citizen",
+  "availability": "Open to remote roles",
+  "links": [
+    { "id": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/kdevnel" },
+    { "id": "github", "label": "GitHub", "url": "https://github.com/kdevnel" },
+    { "id": "blog", "label": "devnel.blog", "url": "https://devnel.blog" }
+  ],
+  "cv": {
+    "engineering": "/cv/Kyle-Nel_CV_Engineering.pdf",
+    "support": "/cv/Kyle-Nel_CV_Support.pdf"
+  }
+}

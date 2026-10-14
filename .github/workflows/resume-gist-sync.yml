@@ -1,0 +1,47 @@
+# Keeps registry.jsonresume.org/kdevnel in sync with src/data/resume.json.
+# TODO(kyle): add the gist ID and token as repo secrets:
+#   RESUME_GIST_ID  the ID of the gist that holds resume.json
+#   GIST_TOKEN      a token with gist write access (see README)
+name: Sync resume to gist
+
+on:
+  push:
+    branches: [main]
+    paths: [src/data/resume.json]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Never publish a file that fails the same checks as CI.
+      - run: npm run resume:check
+
+      - name: Update the gist
+        env:
+          GIST_ID: ${{ secrets.RESUME_GIST_ID }}
+          GH_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: |
+          if [ -z "$GIST_ID" ] || [ -z "$GH_TOKEN" ]; then
+            echo "::warning::RESUME_GIST_ID or GIST_TOKEN is not set; skipping gist sync."
+            exit 0
+          fi
+          jq -n --rawfile content src/data/resume.json \
+            '{files: {"resume.json": {content: $content}}}' > payload.json
+          curl --fail-with-body --silent --show-error \
+            -X PATCH "https://api.github.com/gists/${GIST_ID}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            --data @payload.json > /dev/null
+          echo "Updated gist ${GIST_ID}: https://registry.jsonresume.org/kdevnel"

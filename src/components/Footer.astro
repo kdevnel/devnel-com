@@ -1,0 +1,132 @@
+---
+import Logo from './brand/Logo.astro';
+import EmailLink from './EmailLink.astro';
+import { getSite } from '@/lib/content';
+
+const site = await getSite();
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer pattern">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <Logo class="site-footer__logo" />
+      <p>Tailored in Cape Town.</p>
+    </div>
+    <nav class="site-footer__nav" aria-label="Elsewhere">
+      <span class="eyebrow" aria-hidden="true">
+        &lt;elsewhere&gt;
+      </span>
+      <ul role="list">
+        <li>
+          <EmailLink />
+        </li>
+        {site.links.map((link) => (
+          <li>
+            <a href={link.url} rel="me">
+              {link.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href={site.cv.engineering} download>
+            Download CV <span class="visually-hidden">(PDF)</span>
+          </a>
+        </li>
+        <li>
+          <a href="/cv/">CV (web version)</a>
+        </li>
+      </ul>
+    </nav>
+    <p class="site-footer__legal">
+      © {year} {site.name}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    --text: var(--paper);
+    --text-muted: #d9cfc0;
+    --link: var(--sun);
+    --link-hover: #fde6b4;
+    --underline: var(--sage);
+    --focus: var(--sun);
+    --logo-word: var(--paper);
+    --logo-mark: var(--sun);
+    --pattern: var(--sage);
+    --pattern-opacity: 0.35;
+    background: var(--footer-bg, var(--pine));
+    color: var(--text);
+    border-top: 1px solid #50605d;
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .site-footer {
+      --footer-bg: #222d2b;
+    }
+  }
+
+  /* Brand on the left, links as one wrapping row bottom-right, legal below. */
+  .site-footer__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__inner {
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      column-gap: var(--space-2xl);
+    }
+
+    .site-footer__nav {
+      justify-self: end;
+      text-align: end;
+    }
+
+    .site-footer__nav ul {
+      justify-content: flex-end;
+    }
+  }
+
+  .site-footer__brand {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .site-footer__brand :global(.site-footer__logo) {
+    --logo-width: 11rem;
+  }
+
+  .site-footer__brand p {
+    color: var(--text-muted);
+  }
+
+  .site-footer__nav .eyebrow {
+    color: var(--text-muted);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* :global so the EmailLink component's anchor gets the same box. */
+  ul :global(a) {
+    display: inline-block;
+    padding-block: 0.35rem; /* 44px-ish touch targets without looking padded */
+  }
+
+  .site-footer__legal {
+    grid-column: 1 / -1;
+    padding-block-start: var(--space-m);
+    border-top: 1px solid #50605d;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+</style>

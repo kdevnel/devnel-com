@@ -1,0 +1,2 @@
+# Files in public/ that Workers static assets should never upload.
+.DS_Store

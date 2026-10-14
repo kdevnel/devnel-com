@@ -1,0 +1,348 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import CaseCard from '@/components/CaseCard.astro';
+import Divider from '@/components/Divider.astro';
+import ContactForm from '@/components/ContactForm.astro';
+import { getCaseStudies, getRecentPosts, getServices, getSite, siteLink } from '@/lib/content';
+import { formatDate } from '@/lib/format';
+import { homeJsonLd } from '@/lib/seo';
+
+const site = await getSite();
+const studies = await getCaseStudies({ featuredOnly: true });
+const services = await getServices();
+const posts = await getRecentPosts(3);
+const blog = siteLink(site, 'blog');
+---
+
+<Base
+  title={`${site.name}: full-stack engineer and support lead · ${site.brand}`}
+  jsonLd={homeJsonLd()}
+  description="Kyle Nel is a full-stack engineer and technical support lead in Cape Town. TypeScript, React, Node.js, PHP and WordPress, plus DevOps and team leadership."
+>
+  <section class="hero pattern" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <h1 id="hero-title" class="hero__statement">
+        I build <span class="highlight">useful tools</span> for real businesses.
+      </h1>
+      <div class="hero__intro">
+        <p class="lede">
+          I'm Kyle, a full-stack engineer and technical support lead in Cape Town. I look past the
+          code to the bigger picture. I see what businesses actually need, how it should be built,
+          and which unknowns are going to catch us out later.
+        </p>
+        <ul class="hero__facts" role="list" aria-label="At a glance">
+          <li>{site.location}</li>
+          <li>{site.timezone}</li>
+          <li>{site.citizenship}</li>
+          <li>{site.availability}</li>
+        </ul>
+        <div class="button-row">
+          <a class="button" href="/contact/">
+            Get in touch
+          </a>
+          <a class="button button--secondary" href={site.cv.engineering} download>
+            Download CV <span class="visually-hidden">(PDF)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="section container" aria-labelledby="work-title" data-reveal>
+    <SectionHeading eyebrow="selected work" title="Selected work" id="work-title" />
+    <ul class="case-grid" role="list">
+      {studies.map((study) => (
+        <li>
+          <CaseCard study={study} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section container" aria-labelledby="services-title" data-reveal>
+    <SectionHeading eyebrow="what i do" title="What I do" id="services-title" />
+    <ul class="services" role="list">
+      {services.map((s) => (
+        <li>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="container">
+    <Divider />
+  </div>
+
+  <section class="section container" aria-labelledby="writing-title" data-reveal>
+    <SectionHeading eyebrow="writing" title="Writing" id="writing-title">
+      <p class="meta">
+        Notes from the job, on <a href={blog.url}>devnel.blog</a>.
+      </p>
+    </SectionHeading>
+    <ul class="posts" role="list">
+      {posts.map((post) => (
+        <li class="post">
+          <time class="meta" datetime={post.date.toISOString()}>
+            {formatDate(post.date)}
+          </time>
+          <h3>
+            <a href={post.link}>{post.title}</a>
+          </h3>
+          <p>{post.excerpt}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="more">
+      <a href={blog.url}>
+        More on devnel.blog{' '}
+        <span class="arrow" aria-hidden="true">
+          →
+        </span>
+      </a>
+    </p>
+  </section>
+
+  <section class="section surface-alt about-short" aria-labelledby="about-title" data-reveal>
+    <div class="container about-short__grid">
+      <SectionHeading eyebrow="about" title="About me" id="about-title" />
+      <div class="flow">
+        <p class="lede">
+          I'm a down-to-earth engineer who loves the web. I've worked on many sides of it. Six years
+          at Automattic (WooCommerce.com and WordPress.com), four as Technical Director of a UK
+          development agency, as well as my own consultancy, devNel. I do my best work in a team,
+          helping everyone else do theirs, and I'd rather build something useful than something
+          generic.
+        </p>
+        <p>
+          <a href="/about/">
+            More about me{' '}
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-band" aria-labelledby="contact-title" data-reveal>
+    <div class="container contact-band__grid">
+      <SectionHeading eyebrow="contact" title="Get in touch" id="contact-title">
+        <p>Hiring, or have a project in mind? Send me a message and I'll get back to you.</p>
+      </SectionHeading>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero: asymmetric grid on a soft yellow wash with the slash pattern. */
+  .hero {
+    --pattern: var(--stone);
+    --pattern-opacity: 0.3;
+    --link: var(--link-alt);
+    --text-muted: var(--muted-on-pattern);
+    background: var(--bg-alt);
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .hero::before {
+    /* Keep the pattern to the band's right-hand side, away from the text. */
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-image:
+      var(--slash-mask), linear-gradient(to left, #000 0%, #000 25%, transparent 60%);
+    mask-image: var(--slash-mask), linear-gradient(to left, #000 0%, #000 25%, transparent 60%);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero__statement {
+    font-size: var(--step-5);
+    line-height: 1.08;
+    color: var(--heading);
+    max-width: 14ch;
+  }
+
+  /* The highlighter: --sun in light mode, --sage in dark (under sun text,
+     3.7:1, fine at this size). Follows the link underline token. */
+  .highlight {
+    background: linear-gradient(
+      transparent 62%,
+      var(--underline) 62%,
+      var(--underline) 92%,
+      transparent 92%
+    );
+    color: inherit;
+    padding-inline: 0.04em;
+    white-space: nowrap; /* keep the highlighted phrase on one line */
+  }
+
+  .hero__intro {
+    display: grid;
+    gap: var(--space-m);
+    max-width: 36rem;
+  }
+
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .hero__facts li:not(:last-child)::after {
+    content: '·';
+    padding-inline: 0.6em;
+  }
+
+  /* Side by side on wide screens: a 7:5 split, vertically centred on each
+     other so there's no empty quadrant. */
+  @media (min-width: 56rem) {
+    .hero__grid {
+      grid-template-columns: 7fr 5fr;
+      column-gap: var(--space-xl);
+      align-items: center;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .hero {
+      --pattern: var(--sage);
+    }
+  }
+
+  /* Selected work */
+  .case-grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each column is a size container, so card titles can scale to fit it
+     (see CaseCard). min-width: 0 stops long words widening the column. */
+  .case-grid > li {
+    display: grid;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  /* What I do */
+  .services {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  .services li {
+    border-top: 2px solid var(--accent);
+    padding-block-start: var(--space-s);
+  }
+
+  .services h3 {
+    margin-block-end: var(--space-2xs);
+  }
+
+  /* Writing */
+  .posts {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  .post {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-block-start: var(--space-s);
+    border-top: var(--border);
+  }
+
+  .post p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+  }
+
+  .post h3 a {
+    text-decoration-color: transparent;
+  }
+
+  .post h3 a:hover {
+    text-decoration-color: var(--underline);
+  }
+
+  .more {
+    margin-block-start: var(--space-m);
+    font-weight: 600;
+  }
+
+  /* About (short) */
+  .about-short__grid {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 56rem) {
+    .about-short__grid {
+      grid-template-columns: 4fr 8fr;
+      column-gap: var(--space-2xl);
+    }
+  }
+
+  .about-short .lede {
+    max-width: var(--measure);
+  }
+
+  /* Contact: the rare dark band */
+  .contact-band {
+    --text: var(--paper);
+    --text-muted: #d9cfc0;
+    --heading: var(--sun);
+    --link: var(--sun);
+    --link-hover: #fde6b4;
+    --underline: var(--sage);
+    --focus: var(--sun);
+    --error: #f2a594;
+    background: var(--pine);
+    color: var(--text);
+    padding-block: var(--space-2xl);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .contact-band {
+      background: var(--bg-alt);
+    }
+  }
+
+  .contact-band__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 56rem) {
+    .contact-band__grid {
+      grid-template-columns: 5fr 7fr;
+      column-gap: var(--space-2xl);
+    }
+  }
+</style>

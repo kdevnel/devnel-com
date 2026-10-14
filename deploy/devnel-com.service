@@ -1,0 +1,47 @@
+# systemd unit for the Astro Node server. Copy to /etc/systemd/system/,
+# then: systemctl daemon-reload && systemctl enable --now devnel-com
+[Unit]
+Description=devnel.com (Astro, Node standalone)
+After=network.target
+
+[Service]
+Type=simple
+User=devnel
+WorkingDirectory=/srv/devnel-com
+EnvironmentFile=/srv/devnel-com/.env
+Environment=HOST=127.0.0.1
+Environment=PORT=4321
+Environment=NODE_ENV=production
+# Behind Caddy or Nginx: rate limit by the visitor's IP, not the proxy's.
+Environment=CLIENT_IP_HEADER=x-forwarded-for
+ExecStart=/usr/bin/node ./dist/server/entry.mjs
+Restart=on-failure
+
+# Resource limits: the server only handles the contact form.
+MemoryMax=256M
+TasksMax=64
+
+# Hardening. The app only needs to read its files (and write MAIL_LOG_FILE if set).
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+# ProtectSystem=strict makes everything read-only; to use MAIL_LOG_FILE, add
+# ReadWritePaths= for its directory.
+
+[Install]
+WantedBy=multi-user.target

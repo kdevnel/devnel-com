@@ -1,0 +1,407 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Kyle Devereaux Nel",
+    "label": "Senior Full-Stack Engineer · TypeScript / React / Node.js / PHP · DevOps",
+    "email": "kyle@devnel.com",
+    "url": "https://devnel.com",
+    "summary": "I'm a down-to-earth engineer who loves the web. I'm good with people, and I look past the code to the bigger picture: what the business actually needs, how a project or tool should be architected, and which unknowns are going to catch us out later. I do my best work in a team, helping everyone else do theirs. I want to build useful things, not generic ones: apps that solve a real business problem and websites that make a difference.\n\nOver 10+ years I've worked across product engineering, DevOps, technical support and leadership, including six years at Automattic (WooCommerce.com and WordPress.com) and four as Technical Director of a UK agency.",
+    "location": {
+      "city": "Cape Town",
+      "region": "Western Cape",
+      "countryCode": "ZA"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "kdevnel",
+        "url": "https://www.linkedin.com/in/kdevnel"
+      },
+      {
+        "network": "GitHub",
+        "username": "kdevnel",
+        "url": "https://github.com/kdevnel"
+      },
+      {
+        "network": "Blog",
+        "url": "https://devnel.blog"
+      }
+    ],
+    "x-workRights": "Dual South African and British citizen; right to work in South Africa and the UK. Timezone UTC+2. Open to remote or WFH-led hybrid.",
+    "x-tracks": {
+      "support": {
+        "label": "Technical Support Lead · Support Engineering · Web, Hosting & SaaS",
+        "summary": "I'm a down-to-earth support lead and engineer who loves the web. I've worked on both sides of the ticket: five years as a senior escalation engineer for WordPress.com's enterprise and VIP customers, and years building the sites and tools customers rely on. I'm good with people, and I look past the immediate fix to the bigger picture: what keeps going wrong, what should be self-service, and which unknowns are going to catch the team out later. I do my best work leading a team and helping everyone in it do their best.\n\nOver 10+ years I've managed a customer support team, run engineering and support at a UK agency, and built contact-centre and self-service tools. I'm comfortable explaining technical problems to customers, engineers and management alike."
+      }
+    }
+  },
+  "work": [
+    {
+      "name": "IGrow Group of Companies",
+      "position": "Senior Web Developer",
+      "location": "Cape Town, South Africa",
+      "startDate": "2026-03",
+      "endDate": "2026-10",
+      "summary": "Senior developer across IGrow's four brands (Investments, Rentals, Real Estate International and Execu Move). I worked directly with management, marketing and the contact centre, and mentored the other three developers.",
+      "highlights": [
+        "Rebuilt rentals.igrow.co.za on a custom theme with proper caching. GTmetrix grades went from E/F to A/B, and server load fell even as traffic grew in the months after launch.",
+        "Integrated the site with PropData, pulling in 200+ property listings on a schedule and keeping details and availability in sync.",
+        "Built a viewing-booking tool for the contact centre, tied into Zoho CRM for user accounts, leads and bookings. It's used by 25+ contact-centre staff, 10 rental agents and management (with role-based access) for 30+ bookings a day across 200 properties. Prospective tenants could also book viewings themselves, which took people out of a bottleneck to improve booking rates.",
+        "Scoped an agent roster generator to replace manual scheduling: agents grouped by area, a rules engine, and real Google Maps travel times to fit more viewings into each day, plus reporting for management.",
+        "Started a shared Web Components library for use across all four brands.",
+        "Set up and ran the Linux servers for the apps I built, with GitHub Actions pipelines running smoke and synthetic tests before every deploy.",
+        "Brought AI into the team's workflow: landing pages generated from briefs, brief-to-pull-request automation and automated code review. I handled the architecture and reviewed what the AI produced, and rebuilds that used to take months took days or weeks.",
+        "Built automations in Zoho Flow, SalesIQ and Zapier, and wrote direct API integrations where speed, security or data quality mattered. Worked with marketing to track ad spend and lead sources properly.",
+        "Cleaned up the WordPress sites: brought them up to date, removed plugins we didn't need and replaced them with our own code.",
+        "Set up Linear and the engineering workflow from scratch, then helped move the team to Jira."
+      ],
+      "x-tracks": {
+        "support": {
+          "summary": "Senior developer across IGrow's four brands (Investments, Rentals, Real Estate International and Execu Move). Much of my work was building tools for the people who deal with customers: the contact centre, rental agents and management. I also mentored the other three developers.",
+          "highlights": [
+            "Built a viewing-booking tool for the contact centre, tied into Zoho CRM for user accounts, leads and bookings. It's used by 25+ contact-centre staff, 10 rental agents and management (with role-based access) for 30+ bookings a day across 200 properties. Prospective tenants could also book viewings themselves, which took people out of a bottleneck to improve booking rates.",
+            "Built automations in Zoho Flow, SalesIQ and Zapier to route incoming leads into the CRM and power chat conversations, and wrote direct API integrations where speed, security or data quality mattered.",
+            "Scoped an agent roster generator to replace manual scheduling: agents grouped by area, a rules engine, and real Google Maps travel times, plus reporting and accountability for management.",
+            "Worked closely with management and non-technical teams to work out what they actually needed, explain what was possible, and turn it into working tools.",
+            "Rebuilt rentals.igrow.co.za with proper caching and a PropData integration keeping 200+ listings in sync. GTmetrix grades went from E/F to A/B, and server load fell as traffic grew.",
+            "Set up Linear and the engineering workflow from scratch, then helped move the team to Jira."
+          ]
+        }
+      }
+    },
+    {
+      "name": "devNel",
+      "position": "Founder & Full-Stack Developer",
+      "url": "https://devnel.com",
+      "location": "Remote",
+      "startDate": "2018",
+      "summary": "My own consultancy, building WordPress/WooCommerce and modern web projects (including Astro + Sanity), plus DevOps and AI work, mostly for non-technical clients.",
+      "highlights": [
+        "Build sites end to end, from hosting and deployment to handover, with performance, accessibility and SEO built in.",
+        "Built two live sites for Quiver Café, a social-impact café in Cape Town, on Astro, Sanity and Cloudflare Workers. Online ordering is ready to go: Yoco payments and Uber Direct delivery that the owner switches on with a single toggle in Sanity.",
+        "Audit AI-focused projects for security and put guard rails around how teams use AI tools."
+      ],
+      "x-tracks": {
+        "support": {
+          "summary": "My own consultancy, building WordPress/WooCommerce and modern web projects, plus DevOps and AI work, mostly for non-technical clients.",
+          "highlights": [
+            "Look after clients end to end: scoping, building, hosting, handover and ongoing support, explained in plain language.",
+            "Rebuilt Quiver Café's sites (Astro, Sanity, Cloudflare Workers) so a non-technical owner can run them without a developer, including Yoco payments and Uber Direct delivery they can switch on themselves with one toggle in Sanity.",
+            "Audit AI-focused projects for security and put guard rails around how teams use AI tools."
+          ]
+        }
+      },
+      "x-note": "Part-time alongside employment; full-time Apr 2025 – Mar 2026"
+    },
+    {
+      "name": "Automattic (WooCommerce.com)",
+      "position": "Software Engineer (Full Stack)",
+      "url": "https://woocommerce.com",
+      "location": "Remote",
+      "startDate": "2023-09",
+      "endDate": "2025-04",
+      "summary": "Product engineer on WooCommerce.com, working on discovery, performance, SEO and AI.",
+      "highlights": [
+        "Co-led the React rebuild of the WooCommerce.com Marketplace and architected its product-card components and interaction tracking. It's still the live marketplace today.",
+        "Built the AI proxy integration used across WooCommerce.com, so AI features shipped one consistent way with prompt-level control, usage tracking and cost reporting.",
+        "Shipped an experimental AI product-comparison MVP to help customers choose extensions.",
+        "Removed 40%+ of plugin-based redirects by writing a CLI tool that moved them to NGINX.",
+        "Automated syncing and translation of SEO metadata into our in-house translation tool.",
+        "Planned a shared recommendations setup using Algolia Recommend behind our own API proxy."
+      ],
+      "x-tracks": {
+        "support": {
+          "summary": "Moved from support into product engineering on WooCommerce.com, working on discovery, performance, SEO and AI.",
+          "highlights": [
+            "Co-led the React rebuild of the WooCommerce.com Marketplace, still the live marketplace today.",
+            "Built the AI proxy integration used across WooCommerce.com, with prompt-level control, usage tracking and cost reporting.",
+            "Removed 40%+ of plugin-based redirects by writing a CLI tool that moved them to NGINX."
+          ]
+        }
+      }
+    },
+    {
+      "name": "Automattic (WordPress.com)",
+      "position": "Senior Technical Support Engineer / Project Lead",
+      "url": "https://wordpress.com",
+      "location": "Remote",
+      "startDate": "2018",
+      "endDate": "2023",
+      "summary": "Handled escalations for enterprise and VIP customers and led cross-team projects to improve self-service.",
+      "highlights": [
+        "Fixed complex VIP issues involving custom code, server access and platform-specific problems.",
+        "Led the build of automated plan-downgrade flows, so customers could do it themselves instead of waiting on support.",
+        "Named a \"Distinguished HE\" for customer experience: top 5 of 300+ Happiness Engineers (Automattic's customer support team) in a quarter.",
+        "Mentored new hires through the buddy programme; helped onboard and keep 4+ colleagues.",
+        "Ran live customer webinars and kept self-serve courses up to date."
+      ],
+      "x-tracks": {
+        "support": {
+          "summary": "Senior escalation point for WordPress.com's enterprise and VIP customers, and lead on cross-team projects to cut support load through self-service.",
+          "highlights": [
+            "Handled the hardest escalations: custom code, server access and platform-specific problems for VIP clients.",
+            "Named a \"Distinguished HE\" for customer experience: top 5 of 300+ Happiness Engineers (Automattic's customer support team) in a quarter.",
+            "Led the build of automated plan-downgrade flows, so customers could do it themselves instead of waiting on support.",
+            "Mentored new hires through the buddy programme; helped onboard and keep 4+ colleagues.",
+            "Ran live customer webinars and kept self-serve courses up to date, which reduced support volume."
+          ]
+        }
+      }
+    },
+    {
+      "name": "Illustrate Digital",
+      "position": "Technical Director",
+      "location": "Cardiff, UK",
+      "startDate": "2014-02",
+      "endDate": "2017-12",
+      "highlights": [
+        "Ran engineering, support and project delivery for a WordPress agency. Hired and led a distributed team, owned client relationships and set technical direction.",
+        "Moved the team to remote-first working with Slack and Asana, stayed hands-on with development, and was the escalation point for clients."
+      ],
+      "x-tracks": {
+        "support": {
+          "highlights": [
+            "Ran engineering, support and project delivery for a WordPress agency. Hired and led a distributed team and owned client relationships.",
+            "Was the escalation point for client issues, and stayed hands-on with both support and development.",
+            "Moved the team to remote-first working with Slack and Asana."
+          ]
+        }
+      }
+    },
+    {
+      "name": "Freestart PLC",
+      "position": "Customer Support Manager",
+      "location": "Wigan, UK",
+      "startDate": "2013-04",
+      "endDate": "2014-02",
+      "highlights": [
+        "Managed a team of 3 customer support staff serving web-hosting clients, reporting to senior leadership. Introduced training that improved resolution times and CSAT."
+      ],
+      "x-tracks": {
+        "support": {
+          "highlights": [
+            "Managed a team of 3 customer support staff serving web-hosting clients, reporting to senior leadership.",
+            "Introduced training that improved resolution times and CSAT, and acted as the link between the technical team and leadership on service quality."
+          ]
+        }
+      }
+    }
+  ],
+  "volunteer": [
+    {
+      "organization": "Freedom Church (non-profit)",
+      "position": "Trustee & Volunteer Team Lead",
+      "location": "Cape Town, South Africa",
+      "startDate": "2019-12",
+      "summary": "Trustee on the board of the non-profit arm. Project-managed the AV and network setup for a new building, from choosing vendors to getting it all working. I lead and roster volunteer teams, drawing on 20+ years of running live-production crews."
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Central Lancashire",
+      "area": "Medical Biology",
+      "studyType": "BSc",
+      "startDate": "2006",
+      "endDate": "2008",
+      "score": "First-Class Dissertation"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages & frameworks",
+      "keywords": [
+        "TypeScript",
+        "JavaScript",
+        "React",
+        "Node.js",
+        "PHP",
+        "Laravel",
+        "Astro",
+        "Web Components",
+        "HTML/CSS/SCSS",
+        "Gutenberg",
+        "jQuery"
+      ]
+    },
+    {
+      "name": "Platforms & CMS",
+      "keywords": [
+        "WordPress",
+        "WooCommerce",
+        "WordPress VIP",
+        "Sanity"
+      ]
+    },
+    {
+      "name": "DevOps & infrastructure",
+      "keywords": [
+        "Linux",
+        "NGINX",
+        "Caddy",
+        "Docker",
+        "GitHub Actions",
+        "CircleCI",
+        "Cloudflare Workers",
+        "AWS",
+        "New Relic",
+        "Grafana",
+        "Smoke & synthetic testing"
+      ]
+    },
+    {
+      "name": "Data & integrations",
+      "keywords": [
+        "MySQL/MariaDB",
+        "PostgreSQL",
+        "REST APIs",
+        "PropData",
+        "Google Maps APIs",
+        "Algolia",
+        "Zoho CRM / Flow / SalesIQ",
+        "Zapier",
+        "Yoco",
+        "Uber Direct",
+        "Trino",
+        "Superset"
+      ]
+    },
+    {
+      "name": "AI engineering",
+      "keywords": [
+        "AI-assisted development & code review",
+        "Human-in-the-loop AI tooling",
+        "LLM integration & proxying",
+        "Workflow automation",
+        "AI security auditing"
+      ]
+    },
+    {
+      "name": "Support & leadership",
+      "keywords": [
+        "Escalation management",
+        "Enterprise/VIP support",
+        "Team management & mentoring",
+        "Onboarding & training",
+        "CSAT & resolution time",
+        "Customer webinars",
+        "Self-serve documentation",
+        "Stakeholder management"
+      ]
+    },
+    {
+      "name": "Delivery",
+      "keywords": [
+        "Project scoping",
+        "Agile",
+        "Linear",
+        "Jira",
+        "GitHub Projects",
+        "Asana"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Quiver Café & Liège Waffles",
+      "entity": "devNel",
+      "roles": [
+        "Developer"
+      ],
+      "url": "https://quivercafe.co.za",
+      "description": "Astro + Sanity rebuild on Cloudflare Workers for a social-impact café in Cape Town.",
+      "highlights": [
+        "Both sites fully live; content edited by a non-technical owner in Sanity Studio",
+        "Online ordering built: Yoco payments and Uber Direct delivery, switched on with a single toggle in Sanity"
+      ],
+      "keywords": [
+        "Astro",
+        "Sanity",
+        "TypeScript",
+        "Cloudflare Workers",
+        "Yoco",
+        "Uber Direct"
+      ]
+    },
+    {
+      "name": "WooCommerce.com Marketplace",
+      "entity": "Automattic",
+      "roles": [
+        "Co-lead engineer"
+      ],
+      "url": "https://woocommerce.com/products/",
+      "description": "React rebuild of the WooCommerce.com Marketplace; still the live marketplace.",
+      "keywords": [
+        "React",
+        "TypeScript",
+        "PHP"
+      ]
+    }
+  ],
+  "x-tracks": {
+    "support": {
+      "skills": [
+        {
+          "name": "Support & leadership",
+          "keywords": [
+            "Escalation management",
+            "Enterprise/VIP support",
+            "Team management and mentoring",
+            "Onboarding and training",
+            "CSAT and resolution-time improvement",
+            "Customer webinars",
+            "Self-serve courses and documentation",
+            "Stakeholder management"
+          ]
+        },
+        {
+          "name": "Process & tooling",
+          "keywords": [
+            "Support workflows and automation",
+            "Self-service flows",
+            "CRM and chat automation (Zoho CRM / Flow / SalesIQ, Zapier)",
+            "Linear",
+            "Jira",
+            "GitHub Projects",
+            "Asana"
+          ]
+        },
+        {
+          "name": "Technical depth",
+          "keywords": [
+            "WordPress",
+            "WooCommerce",
+            "PHP",
+            "JavaScript/TypeScript",
+            "React",
+            "Node.js",
+            "MySQL/MariaDB",
+            "PostgreSQL",
+            "REST APIs",
+            "Linux servers",
+            "NGINX",
+            "Caddy",
+            "Docker",
+            "GitHub Actions",
+            "New Relic",
+            "Grafana"
+          ]
+        },
+        {
+          "name": "AI",
+          "keywords": [
+            "AI-assisted support and development workflows",
+            "Human-in-the-loop AI tooling",
+            "LLM integration",
+            "AI security auditing"
+          ]
+        }
+      ]
+    }
+  },
+  "meta": {
+    "canonical": "https://devnel.com/resume.json",
+    "version": "2026-10",
+    "lastModified": "2026-10-13",
+    "x-tracks-help": "Top-level fields are the engineering track. 'x-tracks.support' on basics and work entries overrides label/summary/highlights for the support-track CV."
+  }
+}
