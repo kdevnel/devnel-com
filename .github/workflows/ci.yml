@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   verify:
+    # The check name branch protection requires on main.
+    name: CI
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
