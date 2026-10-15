@@ -1,7 +1,7 @@
 # Keeps registry.jsonresume.org/kdevnel in sync with src/data/resume.json.
-# TODO(kyle): add the gist ID and token as repo secrets:
+# Needs two repo secrets (it skips with a warning without them):
 #   RESUME_GIST_ID  the ID of the gist that holds resume.json
-#   GIST_TOKEN      a token with gist write access (see README)
+#   GIST_TOKEN      a classic token with only the gist scope (see README)
 name: Sync resume to gist
 
 on:
@@ -36,7 +36,11 @@ jobs:
             echo "::warning::RESUME_GIST_ID or GIST_TOKEN is not set; skipping gist sync."
             exit 0
           fi
-          jq -n --rawfile content src/data/resume.json \
+          # The registry rejects fields outside the schema (the official schema
+          # allows them), so drop the site-only x- fields such as x-tracks.
+          jq 'walk(if type == "object" then with_entries(select(.key | startswith("x-") | not)) else . end)' \
+            src/data/resume.json > registry-resume.json
+          jq -n --rawfile content registry-resume.json \
             '{files: {"resume.json": {content: $content}}}' > payload.json
           curl --fail-with-body --silent --show-error \
             -X PATCH "https://api.github.com/gists/${GIST_ID}" \

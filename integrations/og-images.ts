@@ -28,8 +28,8 @@ const C = {
   stone: '#BFB8AF',
 };
 
-// TODO(kyle): confirm tagline (kept in sync with src/components/brand/Logo.astro).
-const TAGLINE = '<full-stack engineer>';
+// Kept in sync with src/components/brand/Logo.astro.
+const TAGLINE = '<full-stack engineer and support lead>';
 
 type Node = { type: string; props: Record<string, unknown> };
 const h = (type: string, style: Record<string, unknown>, children?: unknown): Node => ({
@@ -103,7 +103,7 @@ function defaultCard(logo: string, pattern: string) {
     [
       h('div', { display: 'flex', flexDirection: 'column', gap: 28, marginTop: 70 }, [
         img(logo, { width: 600, height: 110 }),
-        h('div', { display: 'flex', fontSize: 50, color: C.sageDeep }, TAGLINE),
+        h('div', { display: 'flex', fontSize: 44, color: C.sageDeep }, TAGLINE),
       ]),
       footer('Kyle Nel · Cape Town · devnel.com'),
     ],

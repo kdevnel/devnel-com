@@ -1,7 +1,7 @@
 /*
  * devNel design tokens.
  * Colours derive from the 2018 brand palette (sage, clay, sun, stone).
- * Contrast ratios for every text pairing are listed in the README.
+ * Contrast ratios for every text pairing: `npm run contrast`.
  */
 :root {
   /* Palette */
