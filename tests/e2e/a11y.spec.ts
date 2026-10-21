@@ -19,6 +19,7 @@ const PAGES = [
   '/work/igrow/',
   '/work/woocommerce-marketplace/',
   '/work/quiver-cafe/',
+  '/work/qs-coffee-cart/',
   '/this-page-does-not-exist/',
 ];
 
