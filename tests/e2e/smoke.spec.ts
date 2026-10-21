@@ -70,7 +70,7 @@ test('main navigation works', async ({ page }) => {
   );
 });
 
-for (const slug of ['igrow', 'woocommerce-marketplace', 'quiver-cafe']) {
+for (const slug of ['igrow', 'woocommerce-marketplace', 'quiver-cafe', 'qs-coffee-cart']) {
   test(`case study "${slug}" renders`, async ({ page }) => {
     await page.goto('/');
     await page.locator(`a[href="/work/${slug}/"]`).click();

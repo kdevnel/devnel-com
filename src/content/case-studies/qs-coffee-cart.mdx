@@ -1,0 +1,95 @@
+---
+title: 'Q’s Coffee Cart Website'
+slug: qs-coffee-cart
+summary: 'A simple static site for a small startup. The goal was impressive speed, great SEO and a quick turnaround.'
+client: Q’s Coffee Cart
+role: Developer (devNel)
+period: 'October 2026'
+stack:
+  - Astro
+  - TypeScript
+  - Cloudflare Workers
+  - Resend.com
+links:
+  - label: qscoffeecart.co.za
+    url: https://qscoffeecart.co.za
+cover: qs-coffee-cart
+coverAlt: 'A screenshot of the Q’s Coffee Cart website with a simple header and clean design in blue. A photo of Quincy as a hero image and a tagline "Every cup has a story. This is mine." with pricing.'
+order: 4
+featured: true
+---
+
+import ArchDiagram from '@/components/ArchDiagram.astro';
+
+## The problem
+
+Q's Coffee Cart is a small business born out of the owner's addiction recovery
+journey. The owner needed a simple website in order to promote their
+business and take enquiries and bookings.
+
+As a small startup, the goal was a simple site that didn't compromise on looks
+while providing a fast experience and minimal ongoing costs. Ongoing updates
+were going to be minimal, but the site needed to be ready for a content
+management system in the future without a major rebuild.
+
+## Constraints
+
+- **Keep costs low in the early stages.** As a startup, we wanted to give as much
+  profit back to the business.
+- **A cool design without many existing assets.** The team had a logo, font and
+  colour but little else to work with. We still needed a cool design aesthetic.
+- **Take enquiries with as much info as possible.** The team are still working
+  things out so we needed to figure out a form layout that would get them plenty
+  of information to provide quotes without overcomplicating things.
+
+## What I built
+
+**We helped the team explore their initial design direction.** The team
+needed to explore if the site should be led by Quincy's journey, or if it would
+work better to lead with the business proposition. We provided a series of three
+design, layout and content options to choose from with a round of edits and a
+final draft to help them choose the best way forward.
+
+Once a path was chosen, I got to work building the site using an Astro frontend.
+Content is powered by JSON files and a middleware that would allow me to swap the
+content for data supplied by a CMS later. Options include Sanity or WordPress
+depending on their needs in the future.
+
+The site code is tracked in GitHub, hosted through Cloudflare Workers and forms
+are powered by Resend.com. This stack keeps ongoing costs to zero at this scale.
+When the time comes to upgrade, running costs will start small and will scale.
+
+<ArchDiagram
+  title="Q’s Coffee Cart architecture"
+  description="Content lives in JSON files behind a content layer, so a CMS such as Sanity or WordPress can replace them later. The Astro site on Cloudflare Workers reads that content and serves visitors. Enquiries from the booking form are sent to the team by email through Resend."
+  nodes={[
+    { id: 'content', label: 'JSON content', sub: 'CMS-ready content layer', col: 0, row: 0 },
+    { id: 'site', label: 'Astro site', sub: 'Cloudflare Workers', col: 1, row: 0, primary: true },
+    { id: 'visitors', label: 'Visitors', sub: 'enquiries + bookings', col: 2, row: 0 },
+    { id: 'resend', label: 'Resend', sub: 'form email', col: 1, row: 1 },
+    { id: 'team', label: 'The team', sub: 'enquiry inbox', col: 2, row: 1 },
+  ]}
+  edges={[
+    { from: 'content', to: 'site', label: 'content' },
+    { from: 'site', to: 'visitors', both: true },
+    { from: 'site', to: 'resend', label: 'enquiries' },
+    { from: 'resend', to: 'team' },
+  ]}
+/>
+
+## Stack
+
+Astro and TypeScript for the site, Cloudflare Workers for hosting, Resend for
+mail from the contact form.
+
+## Results
+
+- **Performance and accessibility are solid.** Lighthouse scores remain almost
+  perfect, while accessibility is checked and tested to high standards.
+- **SEO, OpenGraph and schema are all included.**
+- **Content management ready** with an easy swap to a CMS for editing later on.
+- **Ongoing costs are almost non-existent**, keeping early profits available for
+  the growth of the business.
+- **Full control given to Quincy**. All of the services have been created with
+  Quincy as the primary account holder. I'm still on hand to help ongoing, but at
+  all times the content and stack is fully owned by the team.
